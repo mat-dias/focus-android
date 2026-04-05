@@ -1,0 +1,17 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Corpo do sino -->
+    <path
+        android:pathData="M12,3C9.5,3 8,5 8,7V10C8,11.5 7.3,12.8 6,14V15H18V14C16.7,12.8 16,11.5 16,10V7C16,5 14.5,3 12,3Z"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Parte de baixo do sino -->
+    <path
+        android:pathData="M10,17C10,18.1 10.9,19 12,19C13.1,19 14,18.1 14,17H10Z"
+        android:fillColor="#FFFFFF"/>
+
+</vector>

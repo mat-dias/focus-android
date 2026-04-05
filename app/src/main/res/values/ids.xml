@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- IDs dos labels da bottom navbar -->
+    <item name="lblHome"    type="id"/>
+    <item name="lblStats"   type="id"/>
+    <item name="lblGoals"   type="id"/>
+    <item name="lblProfile" type="id"/>
+</resources>
