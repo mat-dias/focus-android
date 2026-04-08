@@ -72,50 +72,63 @@ public class ActivityRegister extends AppCompatActivity {
 
     private void registrar() {
 
-        String nome = etNome.getText().toString();
-        String email = etEmail.getText().toString();
-        String senha = etPassword.getText().toString();
+        String nome = etNome.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String senha = etPassword.getText().toString().trim();
 
-        int selectedId = rgSexo.getCheckedRadioButtonId();
-        String sexo = "";
-
-        if (selectedId != -1) {
-            RadioButton rb = findViewById(selectedId);
-            sexo = rb.getText().toString();
-        }
-
-        if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || dataSelecionada.isEmpty() || sexo.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || senha.isEmpty()) {
             Toast.makeText(this, "Preencha tudo!", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        btnRegister.setText("Carregando...");
+        btnRegister.setEnabled(false);
+
         ApiService api = RetrofitClient.getClient().create(ApiService.class);
 
-        Call<String> call = api.register(nome, email, senha, dataSelecionada, sexo);
+        api.register(nome, email, senha).enqueue(new Callback<BasicResponse>() {
 
-        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
 
-                if (response.isSuccessful()) {
+                btnRegister.setText("Cadastrar");
+                btnRegister.setEnabled(true);
 
-                    String res = response.body();
+                if (response.isSuccessful() && response.body() != null) {
 
-                    Toast.makeText(ActivityRegister.this, res, Toast.LENGTH_SHORT).show();
+                    BasicResponse res = response.body();
 
-                    if (res.equals("cadastro_ok")) {
+                    if ("ok".equals(res.status)) {
+
+                        Toast.makeText(ActivityRegister.this,
+                                "Cadastro realizado!",
+                                Toast.LENGTH_SHORT).show();
+
                         startActivity(new Intent(ActivityRegister.this, ActivityLogin.class));
                         finish();
+
+                    } else {
+                        Toast.makeText(ActivityRegister.this,
+                                res.msg,
+                                Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
-                    Toast.makeText(ActivityRegister.this, "Erro servidor", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityRegister.this,
+                            "Erro no servidor",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(ActivityRegister.this, "Erro conexão", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<BasicResponse> call, Throwable t) {
+
+                btnRegister.setText("Cadastrar");
+                btnRegister.setEnabled(true);
+
+                Toast.makeText(ActivityRegister.this,
+                        "Erro de conexão",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }

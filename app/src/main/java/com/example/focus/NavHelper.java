@@ -22,14 +22,13 @@ public class NavHelper {
         TextView lblGoals   = activity.findViewById(R.id.lblGoals);
         TextView lblProfile = activity.findViewById(R.id.lblProfile);
 
-        // 🔥 COLORIR
+        //  COLORIR o botão da pagina ativa
         colorir(navHome,    lblHome,    activeScreen.equals("home"));
         colorir(navStats,   lblStats,   activeScreen.equals("stats"));
         colorir(navGoals,   lblGoals,   activeScreen.equals("goals"));
         colorir(navProfile, lblProfile, activeScreen.equals("profile"));
 
-        // 🔥 CLIQUES
-
+        //  CLIQUE de cada botão
         if (navHome != null) {
             navHome.setOnClickListener(v -> {
                 if (!activeScreen.equals("home"))
@@ -59,12 +58,14 @@ public class NavHelper {
         }
     }
 
+    //colori botão da pagina inativa
     private static void colorir(AppCompatImageButton btn, TextView lbl, boolean ativo) {
         int cor = ativo ? CYAN : INACTIVE;
         if (btn != null) btn.setColorFilter(cor);
         if (lbl != null) lbl.setTextColor(cor);
     }
 
+    //fecha a ultima pagina para melhorar desempenho
     private static void navegar(Activity de, Class<?> para) {
         Intent intent = new Intent(de, para);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

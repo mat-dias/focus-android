@@ -20,6 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Avatar do usuário com fundo gradiente -->
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -29,6 +30,7 @@
             android:contentDescription="Avatar"
             app:tint="#FFFFFF"/>
 
+        <!-- Nome do usuário carregado dinamicamente -->
         <TextView
             android:id="@+id/txtProfileName"
             android:layout_width="wrap_content"
@@ -39,6 +41,7 @@
             android:textStyle="bold"
             android:layout_marginTop="12dp"/>
 
+        <!-- Email do usuário carregado dinamicamente -->
         <TextView
             android:id="@+id/txtProfileEmail"
             android:layout_width="wrap_content"
@@ -74,14 +77,17 @@
             android:gravity="center"
             android:padding="14dp">
 
+            <!-- Icone do STREAK badge -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="🔥" android:textSize="22sp"/>
 
+            <!-- Contagem do STREAK atualizada dinamicamente -->
             <TextView android:id="@+id/txtProfileStreak"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="0" android:textColor="#FFFFFF"
                 android:textSize="18sp" android:textStyle="bold" android:layout_marginTop="4dp"/>
 
+            <!-- Label do STREAK -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="Streak" android:textColor="#888888" android:textSize="11sp"/>
         </LinearLayout>
@@ -97,14 +103,17 @@
             android:gravity="center"
             android:padding="14dp">
 
+            <!-- Icone do XP badge -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="⭐" android:textSize="22sp"/>
 
+            <!-- Contagem do XP atualizada dinamicamente -->
             <TextView android:id="@+id/txtProfileXP"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="0 XP" android:textColor="#FFFFFF"
                 android:textSize="18sp" android:textStyle="bold" android:layout_marginTop="4dp"/>
 
+            <!-- Label do XP -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="XP Total" android:textColor="#888888" android:textSize="11sp"/>
         </LinearLayout>
@@ -125,28 +134,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Editar Perfil -->
+        <!-- Botão para editar perfil -->
         <LinearLayout android:id="@+id/btnEditProfile" style="@style/MenuRowStyle">
             <TextView style="@style/MenuRowText" android:text="Editar Perfil"/>
             <ImageView android:layout_width="22dp" android:layout_height="22dp"
                 android:src="@drawable/ic_nav_profile" app:tint="#888888"/>
         </LinearLayout>
 
-        <!-- Notificações -->
+        <!-- Botão para configurações de notificações -->
         <LinearLayout android:id="@+id/btnNotifications" style="@style/MenuRowStyle" android:layout_marginTop="8dp">
             <TextView style="@style/MenuRowText" android:text="Notificações"/>
             <ImageView android:layout_width="22dp" android:layout_height="22dp"
                 android:src="@drawable/icon_notification" app:tint="#888888"/>
         </LinearLayout>
 
-        <!-- Sobre -->
+        <!-- Botão para informações sobre o aplicativo -->
         <LinearLayout android:id="@+id/btnAbout" style="@style/MenuRowStyle" android:layout_marginTop="8dp">
             <TextView style="@style/MenuRowText" android:text="Sobre o App"/>
             <ImageView android:layout_width="22dp" android:layout_height="22dp"
                 android:src="@drawable/icon_info" app:tint="#888888"/>
         </LinearLayout>
 
-        <!-- Sair -->
+        <!-- Botão para fazer logout da conta -->
         <LinearLayout android:id="@+id/btnLogout" style="@style/MenuRowStyle" android:layout_marginTop="8dp">
             <TextView
                 android:layout_width="0dp"
@@ -161,12 +170,7 @@
 
     </LinearLayout>
 
-    <!--
-        Cole este bloco substituindo o <LinearLayout id="bottomNav">
-        em: activity_main.xml, activity_tasks.xml, activity_profile.xml
-        ATENÇÃO: o ConstraintLayout pai precisa ter:
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-    -->
+    <!-- Barra de navegação principal do aplicativo -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
@@ -182,7 +186,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- HOME -->
+        <!-- HOME  -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -302,7 +306,7 @@
 
     </LinearLayout>
 
-    <!-- ══ FAB CENTRAL ══════════════════════════════════════════════ -->
+    <!-- FAB CENTRAL  -->
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnAdd"
         android:layout_width="62dp"

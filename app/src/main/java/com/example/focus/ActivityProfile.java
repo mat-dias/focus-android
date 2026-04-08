@@ -13,7 +13,7 @@ public class ActivityProfile extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
 
-        // 🔥 ATIVA A NAVBAR E MARCA COMO "PROFILE"
+        // ATIVA A NAVBAR E MARCA COMO "PROFILE"
         NavHelper.setup(this, "profile");
     }
 }

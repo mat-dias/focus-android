@@ -11,10 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import org.json.JSONObject;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * Activity de Login do usuário
+ *
+ * Responsável por:
+ * - Verificar se usuário já está logado
+ * - Validar campos
+ * - Fazer login via API
+ * - Salvar sessão no SharedPreferences
+ */
 public class ActivityLogin extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
@@ -26,6 +32,7 @@ public class ActivityLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Verifica login automático
         SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
         if(prefs.getBoolean("logado", false)) {
             startActivity(new Intent(this, MainActivity.class));
@@ -33,113 +40,86 @@ public class ActivityLogin extends AppCompatActivity {
             return;
         }
 
+        // Inicializa views
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         tvCadastro = findViewById(R.id.tvCadastro);
 
         btnLogin.setOnClickListener(v -> fazerLogin());
-        tvCadastro.setOnClickListener(v -> startActivity(new Intent(this, ActivityRegister.class)));
+        tvCadastro.setOnClickListener(v ->
+                startActivity(new Intent(this, ActivityRegister.class))
+        );
     }
 
+    /**
+     * Executa o login via API
+     */
     private void fazerLogin() {
+
         String email = etEmail.getText().toString().trim();
         String senha = etPassword.getText().toString().trim();
 
+        // Validação simples
         if(email.isEmpty() || senha.isEmpty()) {
-            Toast.makeText(this, "Preencha email e senha", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        btnLogin.setText("⏳");
+        // Loading
+        btnLogin.setText("Carregando...");
         btnLogin.setEnabled(false);
 
-        RetrofitClient.getClient().create(ApiService.class)
-                .login(email, senha)
-                .enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        btnLogin.setText("Entrar");
-                        btnLogin.setEnabled(true);
+        ApiService api = RetrofitClient.getClient().create(ApiService.class);
 
-                        if(response.body() == null) return;
+        api.login(email, senha).enqueue(new Callback<LoginResponse>() {
 
-                        String rawResponse = response.body();
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
-                        try {
-                            // 🔥 MÉTODO 1: Tenta JSON direto
-                            JSONObject json = new JSONObject(rawResponse);
-                            processarResposta(json);
-                            return;
-                        } catch(Exception e1) {
-                            try {
-                                // 🔥 MÉTODO 2: Limpa HTML e tenta JSON
-                                String cleaned = limparHTML(rawResponse);
-                                JSONObject json = new JSONObject(cleaned);
-                                processarResposta(json);
-                                return;
-                            } catch(Exception e2) {
-                                try {
-                                    // 🔥 MÉTODO 3: Extrai JSON com REGEX
-                                    String jsonStr = extrairJSON(rawResponse);
-                                    if(jsonStr != null) {
-                                        JSONObject json = new JSONObject(jsonStr);
-                                        processarResposta(json);
-                                        return;
-                                    }
-                                } catch(Exception e3) {}
-                            }
-                        }
+                btnLogin.setText("Entrar");
+                btnLogin.setEnabled(true);
 
-                        Toast.makeText(ActivityLogin.this, "Erro resposta: " + rawResponse.substring(0, Math.min(100, rawResponse.length())), Toast.LENGTH_LONG).show();
+                if(response.isSuccessful() && response.body() != null){
+
+                    LoginResponse res = response.body();
+
+                    if("ok".equals(res.status)){
+
+                        // Salva sessão
+                        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+                        prefs.edit()
+                                .putBoolean("logado", true)
+                                .putInt("user_id", res.id)
+                                .putString("nome", res.nome)
+                                .putInt("xp", res.xp)
+                                .putInt("streak", res.streak)
+                                .apply();
+
+                        Toast.makeText(ActivityLogin.this,
+                                "Bem-vindo " + res.nome,
+                                Toast.LENGTH_SHORT).show();
+
+                        startActivity(new Intent(ActivityLogin.this, MainActivity.class));
+                        finish();
+
+                    } else {
+                        Toast.makeText(ActivityLogin.this,
+                                "Email ou senha inválidos",
+                                Toast.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        btnLogin.setText("Entrar");
-                        btnLogin.setEnabled(true);
-                        Toast.makeText(ActivityLogin.this, "Sem internet", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private String limparHTML(String html) {
-        return html
-                .replaceAll("<[^>]*>", "")
-                .replaceAll("[\\n\\r\\t ]+", "")
-                .replaceAll("\\\\\"", "\"")
-                .trim();
-    }
-
-    private String extrairJSON(String text) {
-        // 🔥 REGEX PARA ENCONTRAR JSON NA BAGUNÇA
-        Pattern pattern = Pattern.compile("\\{[^}]*\"status\"[^}]*\\}");
-        Matcher matcher = pattern.matcher(text);
-        if(matcher.find()) {
-            return matcher.group();
-        }
-        return null;
-    }
-
-    private void processarResposta(JSONObject json) {
-        try {
-            if("ok".equals(json.getString("status"))) {
-                SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
-                prefs.edit()
-                        .putString("nome", json.getString("nome"))
-                        .putInt("xp", json.optInt("xp", 0))
-                        .putInt("streak", json.optInt("streak", 0))
-                        .putBoolean("logado", true)
-                        .apply();
-
-                Toast.makeText(this, "Login OK - " + json.getString("nome"), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
-            } else {
-                Toast.makeText(this, json.optString("msg", "Erro desconhecido"), Toast.LENGTH_LONG).show();
+                }
             }
-        } catch(Exception e) {
-            Toast.makeText(this, "Erro processar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                btnLogin.setText("Entrar");
+                btnLogin.setEnabled(true);
+
+                Toast.makeText(ActivityLogin.this,
+                        "Erro de conexão",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

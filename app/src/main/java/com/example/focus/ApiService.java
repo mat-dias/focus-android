@@ -5,22 +5,26 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
+/**
+ * Interface de comunicação com a API (backend PHP)
+ * Define todos os endpoints usados pelo app
+ */
 public interface ApiService {
 
+    // LOGIN
     @FormUrlEncoded
     @POST("login.php")
-    Call<String> login(
+    Call<LoginResponse> login(
             @Field("email") String email,
             @Field("senha") String senha
     );
 
+    // CADASTRO
     @FormUrlEncoded
     @POST("register.php")
-    Call<String> register(
+    Call<BasicResponse> register(
             @Field("nome") String nome,
             @Field("email") String email,
-            @Field("senha") String senha,
-            @Field("data_nasc") String dataNasc,
-            @Field("sexo") String sexo
+            @Field("senha") String senha
     );
 }

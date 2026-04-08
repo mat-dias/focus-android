@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#0D0D0D">
 
-    <!-- ══ HEADER ══════════════════════════════════════════════════ -->
+    <!-- Header -->
     <LinearLayout
         android:id="@+id/headerContainer"
         android:layout_width="0dp"
@@ -20,12 +20,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Container com informações principais do usuário -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Mensagem de entrada com (nome do user que é alterado no back-end) -->
             <TextView
                 android:id="@+id/txtWelcome"
                 android:layout_width="wrap_content"
@@ -35,6 +37,7 @@
                 android:textSize="19sp"
                 android:textStyle="bold"/>
 
+            <!-- Mensagem de "vamos focar hoje?" -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,7 +48,7 @@
 
         </LinearLayout>
 
-        <!-- STREAK badge -->
+        <!-- Badge que exibe a sequência de dias ativos do usuário -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="38dp"
@@ -56,9 +59,11 @@
             android:background="@drawable/bg_stat_card"
             android:layout_marginEnd="8dp">
 
+            <!-- Icone do STREAK badge -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="🔥" android:textSize="13sp"/>
 
+            <!-- Contagem do STREAK badge que é alterado no back-end -->
             <TextView
                 android:id="@+id/txtStreak"
                 android:layout_width="wrap_content"
@@ -70,7 +75,7 @@
                 android:layout_marginStart="4dp"/>
         </LinearLayout>
 
-        <!-- XP badge -->
+        <!-- Badge que exibe a experiência acumulada (XP) -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="38dp"
@@ -80,9 +85,11 @@
             android:paddingEnd="12dp"
             android:background="@drawable/bg_stat_card">
 
+            <!-- Icone do XP badge -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="⭐" android:textSize="13sp"/>
 
+            <!-- Contagem do XP atualizada dinamicamente pelo back-end -->
             <TextView
                 android:id="@+id/txtXP"
                 android:layout_width="wrap_content"
@@ -96,7 +103,7 @@
 
     </LinearLayout>
 
-    <!-- ══ MASCOTE ══════════════════════════════════════════════════ -->
+    <!-- Mascote central do aplicativo com fundo em gradiente -->
     <ImageView
         android:id="@+id/imgRobo"
         android:layout_width="120dp"
@@ -112,7 +119,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- ══ TIMER CARD ════════════════════════════════════════════════ -->
+    <!-- TIMER CARD layout -->
     <LinearLayout
         android:id="@+id/timerContainer"
         android:layout_width="0dp"
@@ -129,8 +136,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Botão para diminuir o tempo -->
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btnMinus"
+            android:id="@+id/btnMenos"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/circle_pink_btn"
@@ -140,6 +148,7 @@
             app:tint="#FFFFFF"
             android:elevation="4dp"/>
 
+        <!-- Exibição do tempo atual do timer -->
         <TextView
             android:id="@+id/txtTimer"
             android:layout_width="0dp"
@@ -152,6 +161,7 @@
             android:gravity="center"
             android:fontFamily="monospace"/>
 
+        <!-- Botão de adicionar tempo -->
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btnPlus"
             android:layout_width="50dp"
@@ -165,7 +175,7 @@
 
     </LinearLayout>
 
-    <!-- ══ BOTÃO INICIAR ════════════════════════════════════════════ -->
+    <!-- Botão para iniciar o modo de foco (Focus Mode) -->
     <Button
         android:id="@+id/btnStart"
         android:layout_width="0dp"
@@ -183,7 +193,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- ══ PAUSA / RESET ════════════════════════════════════════════ -->
+    <!-- Layout do botões de pausa e reset -->
     <LinearLayout
         android:id="@+id/controlButtons"
         android:layout_width="0dp"
@@ -197,6 +207,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Botão de pausa do modo "Focus" -->
         <Button
             android:id="@+id/btnPause"
             android:layout_width="0dp"
@@ -210,6 +221,7 @@
             android:layout_marginEnd="8dp"
             android:elevation="4dp"/>
 
+        <!-- Botão de reset do modo "Focus -->
         <Button
             android:id="@+id/btnReset"
             android:layout_width="0dp"
@@ -224,7 +236,7 @@
 
     </LinearLayout>
 
-    <!-- ══ STATUS ════════════════════════════════════════════════════ -->
+    <!-- Área de status: exibe pendências e atualizações do sistema -->
     <LinearLayout
         android:id="@+id/statusBar"
         android:layout_width="0dp"
@@ -241,12 +253,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Bullet point da lista de status -->
         <View
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:background="@drawable/dot_cyan"
             android:layout_marginEnd="10dp"/>
 
+        <!-- Conteudo da lista -->
         <TextView
             android:id="@+id/txtStatus"
             android:layout_width="wrap_content"
@@ -257,7 +271,7 @@
 
     </LinearLayout>
 
-    <!-- ══ FRAGMENT CONTAINER ════════════════════════════════════════ -->
+    <!-- FRAGMENT CONTAINER -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="0dp"
@@ -267,13 +281,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- ══ BOTTOM NAV ════════════════════════════════════════════════ -->
-    <!--
-        Cole este bloco substituindo o <LinearLayout id="bottomNav">
-        em: activity_main.xml, activity_tasks.xml, activity_profile.xml
-        ATENÇÃO: o ConstraintLayout pai precisa ter:
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-    -->
+    <!-- Barra de navegação principal do aplicativo -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
@@ -289,13 +297,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- HOME -->
+        <!-- HOME  -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center">
+
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/navHome"
@@ -409,7 +418,7 @@
 
     </LinearLayout>
 
-    <!-- ══ FAB CENTRAL ══════════════════════════════════════════════ -->
+    <!-- FAB CENTRAL  -->
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnAdd"
         android:layout_width="62dp"

@@ -266,10 +266,6 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="20dp"/>
 
-                <!-- Donut Chart PERFEITO -->
-                <!-- Donut Chart SIMPLES com dados falsos -->
-                <!-- Gráfico de Pizza REAL -->
-                <!-- Gráfico de Pizza SIMPLES - Placeholder -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

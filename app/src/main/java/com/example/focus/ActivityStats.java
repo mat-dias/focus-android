@@ -13,7 +13,7 @@ public class ActivityStats extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_stats);
 
-        // 🔥 ATIVA A NAVBAR (ESSENCIAL)
+        // ATIVA A NAVBAR (ESSENCIAL)
         NavHelper.setup(this, "stats");
     }
 }

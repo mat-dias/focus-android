@@ -18,13 +18,14 @@ public class MainActivity extends AppCompatActivity {
 
         NavHelper.setup(this, "home");
 
-        // 🔥 VERIFICA LOGIN
+        // VERIFICA LOGIN
         prefs = getSharedPreferences("user", MODE_PRIVATE);
         if (!prefs.getBoolean("logado", false)) {
             startActivity(new Intent(this, ActivityLogin.class));
             finish();
             return;
         }
+
 
         initViews();
         carregarDados();
@@ -33,26 +34,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
         txtWelcome = findViewById(R.id.txtWelcome);
-        // txtXP = findViewById(R.id.txtXP);
-        // txtStreak = findViewById(R.id.txtStreak);
     }
 
+    //altera o txtWelcome para ola + nome do usuario
     private void carregarDados() {
         String nome = prefs.getString("nome", "Usuário");
         int xp = prefs.getInt("xp", 0);
         int streak = prefs.getInt("streak", 0);
 
         txtWelcome.setText("Olá, " + nome + "!");
-        // txtXP.setText(xp + " XP");
-        // txtStreak.setText(streak + " dias 🔥");
+
     }
 
-    // 🔥 LOGOUT (chame no botão ou menu)
-    public void fazerLogout() {
-        prefs.edit().clear().apply();
-        startActivity(new Intent(this, ActivityLogin.class));
-        finish();
-    }
+
 }
 
 

@@ -13,7 +13,7 @@ public class ActivityGoals extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_goals);
 
-        // 🔥 ATIVA NAVBAR
+        // ATIVA NAVBAR
         NavHelper.setup(this, "tasks");
     }
 }
