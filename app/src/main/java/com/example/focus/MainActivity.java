@@ -11,42 +11,44 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtWelcome, txtXP, txtStreak;
     private SharedPreferences prefs;
 
+    private PomodoroController pomodoro; // 👈 controlador separado
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NavHelper.setup(this, "home");
-
-        // VERIFICA LOGIN
         prefs = getSharedPreferences("user", MODE_PRIVATE);
+
+        // LOGIN
         if (!prefs.getBoolean("logado", false)) {
             startActivity(new Intent(this, ActivityLogin.class));
             finish();
             return;
         }
 
-
         initViews();
         carregarDados();
+
         NavHelper.setup(this, "home");
+
+        // 👇 INICIA O POMODORO SEPARADO
+        pomodoro = new PomodoroController(this);
     }
 
     private void initViews() {
         txtWelcome = findViewById(R.id.txtWelcome);
+        txtXP = findViewById(R.id.txtXP);
+        txtStreak = findViewById(R.id.txtStreak);
     }
 
-    //altera o txtWelcome para ola + nome do usuario
     private void carregarDados() {
         String nome = prefs.getString("nome", "Usuário");
         int xp = prefs.getInt("xp", 0);
         int streak = prefs.getInt("streak", 0);
 
         txtWelcome.setText("Olá, " + nome + "!");
-
+        txtXP.setText(xp + " XP");
+        txtStreak.setText(String.valueOf(streak));
     }
-
-
 }
-
-

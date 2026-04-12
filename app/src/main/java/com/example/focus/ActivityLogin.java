@@ -92,6 +92,7 @@ public class ActivityLogin extends AppCompatActivity {
                                 .putBoolean("logado", true)
                                 .putInt("user_id", res.id)
                                 .putString("nome", res.nome)
+                                .putString("email", res.email)
                                 .putInt("xp", res.xp)
                                 .putInt("streak", res.streak)
                                 .apply();
