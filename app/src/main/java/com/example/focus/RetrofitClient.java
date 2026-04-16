@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     // ⚠️ TROCAR PELO SEU IP LOCAL (XAMPP)
-    private static final String BASE_URL = "http://10.0.2.2/meuapp/";
+    private static final String BASE_URL = "http://tcc3edsmodetecgr7.hospedagemdesites.ws/";
 
     private static Retrofit retrofit;
 
