@@ -14,6 +14,9 @@ public class ActivityGoals extends AppCompatActivity {
         setContentView(R.layout.activity_goals);
 
         // ATIVA NAVBAR
-        NavHelper.setup(this, "tasks");
+        NavHelper.setup(this, "goals");
+
+        AddTaskHelper.setup(this);
+
     }
 }

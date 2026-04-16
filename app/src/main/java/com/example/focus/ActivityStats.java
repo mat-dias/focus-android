@@ -15,5 +15,8 @@ public class ActivityStats extends AppCompatActivity {
 
         // ATIVA A NAVBAR (ESSENCIAL)
         NavHelper.setup(this, "stats");
+
+        AddTaskHelper.setup(this);
+
     }
 }

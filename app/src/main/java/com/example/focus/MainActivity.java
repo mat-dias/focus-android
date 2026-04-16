@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         NavHelper.setup(this, "home");
 
+        AddTaskHelper.setup(this); // 👈 ISSO AQUI
+
         // 👇 INICIA O POMODORO SEPARADO
         pomodoro = new PomodoroController(this);
     }

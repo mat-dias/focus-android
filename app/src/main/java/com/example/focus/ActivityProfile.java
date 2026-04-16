@@ -24,6 +24,9 @@ public class ActivityProfile extends AppCompatActivity {
 
         NavHelper.setup(this, "profile");
 
+        AddTaskHelper.setup(this);
+
+
         initViews();
         carregarDados();
         setupLogout();

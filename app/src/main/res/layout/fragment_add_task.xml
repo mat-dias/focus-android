@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_bottom_sheet"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="32dp">
+
+    <!-- Handle de arrasto do bottom sheet -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_sheet_handle"/>
+
+    <!-- Título do sheet -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nova tarefa"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Label: Título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TÍTULO"
+        android:textColor="#666666"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Campo de título da tarefa (máx. 60 chars — tasks.title) -->
+    <EditText
+        android:id="@+id/etTaskTitle"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_input_dark"
+        android:textColorHint="#444444"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:inputType="text"
+        android:maxLength="60"
+        android:singleLine="true"
+        android:layout_marginBottom="18dp"/>
+
+    <!-- Label: Prioridade -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PRIORIDADE"
+        android:textColor="#666666"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08"
+        android:layout_marginBottom="10dp"/>
+
+    <!-- Grupo de pills de prioridade (enum: high, medium, low) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="18dp">
+
+        <!-- Prioridade ALTA -->
+        <TextView
+            android:id="@+id/pillHigh"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Alta"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:background="@drawable/pill_priority_high_active"
+            android:textColor="#FF6B8A"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Prioridade MÉDIA -->
+        <TextView
+            android:id="@+id/pillMedium"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Média"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:background="@drawable/pill_priority_inactive"
+            android:textColor="#666666"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Prioridade BAIXA -->
+        <TextView
+            android:id="@+id/pillLow"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Baixa"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:background="@drawable/pill_priority_inactive"
+            android:textColor="#666666"/>
+
+    </LinearLayout>
+
+    <!-- Label: Etiqueta (tag) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ETIQUETA (opcional)"
+        android:textColor="#666666"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Campo de tag com prefixo # (tasks.tag — máx. 35 chars) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_input_dark"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#"
+            android:textColor="#555555"
+            android:textSize="15sp"
+            android:layout_marginEnd="4dp"/>
+
+        <EditText
+            android:id="@+id/etTaskTag"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="trabalho, estudos..."
+            android:textColorHint="#444444"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:inputType="text"
+            android:maxLength="34"
+            android:singleLine="true"/>
+
+    </LinearLayout>
+
+    <!-- Botão de confirmar — reutiliza btn_gradient_primary do main -->
+    <Button
+        android:id="@+id/btnConfirmTask"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:text="Adicionar tarefa"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:background="@drawable/btn_gradient_primary"
+        android:elevation="6dp"/>
+
+</LinearLayout>

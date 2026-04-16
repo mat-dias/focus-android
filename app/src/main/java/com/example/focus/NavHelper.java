@@ -3,12 +3,10 @@ package com.example.focus;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.AppCompatImageButton;
 
 public class NavHelper {
-
-    private static final int CYAN     = 0xFF06B6D4;
-    private static final int INACTIVE = 0xFF555555;
 
     public static void setup(Activity activity, String activeScreen) {
 
@@ -22,54 +20,54 @@ public class NavHelper {
         TextView lblGoals   = activity.findViewById(R.id.lblGoals);
         TextView lblProfile = activity.findViewById(R.id.lblProfile);
 
-        //  COLORIR o botão da pagina ativa
-        colorir(navHome,    lblHome,    activeScreen.equals("home"));
-        colorir(navStats,   lblStats,   activeScreen.equals("stats"));
-        colorir(navGoals,   lblGoals,   activeScreen.equals("goals"));
+        // HOME sempre ativo quando estiver nele
+        colorir(navHome, lblHome, activeScreen.equals("home"));
+        colorir(navStats, lblStats, activeScreen.equals("stats"));
+        colorir(navGoals, lblGoals, activeScreen.equals("goals"));
         colorir(navProfile, lblProfile, activeScreen.equals("profile"));
 
-        //  CLIQUE de cada botão
+        // 🔥 HOME (sempre limpa pilha e volta pro home)
         if (navHome != null) {
             navHome.setOnClickListener(v -> {
-                if (!activeScreen.equals("home"))
-                    navegar(activity, MainActivity.class);
+                Intent i = new Intent(activity, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivity(i);
+                activity.overridePendingTransition(0, 0);
             });
         }
 
         if (navStats != null) {
             navStats.setOnClickListener(v -> {
-                if (!activeScreen.equals("stats"))
-                    navegar(activity, ActivityStats.class); // cria depois
+                if (!activeScreen.equals("stats")) {
+                    activity.startActivity(new Intent(activity, ActivityStats.class));
+                    activity.overridePendingTransition(0, 0);
+                }
             });
         }
 
         if (navGoals != null) {
             navGoals.setOnClickListener(v -> {
-                if (!activeScreen.equals("goals"))
-                    navegar(activity, ActivityGoals.class); // cria depois
+                if (!activeScreen.equals("goals")) {
+                    activity.startActivity(new Intent(activity, ActivityGoals.class));
+                    activity.overridePendingTransition(0, 0);
+                }
             });
         }
 
         if (navProfile != null) {
             navProfile.setOnClickListener(v -> {
-                if (!activeScreen.equals("profile"))
-                    navegar(activity, ActivityProfile.class);
+                if (!activeScreen.equals("profile")) {
+                    activity.startActivity(new Intent(activity, ActivityProfile.class));
+                    activity.overridePendingTransition(0, 0);
+                }
             });
         }
     }
 
-    //colori botão da pagina inativa
     private static void colorir(AppCompatImageButton btn, TextView lbl, boolean ativo) {
-        int cor = ativo ? CYAN : INACTIVE;
+        int cor = ativo ? 0xFF06B6D4 : 0xFF555555;
+
         if (btn != null) btn.setColorFilter(cor);
         if (lbl != null) lbl.setTextColor(cor);
-    }
-
-    //fecha a ultima pagina para melhorar desempenho
-    private static void navegar(Activity de, Class<?> para) {
-        Intent intent = new Intent(de, para);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        de.startActivity(intent);
-        de.finish();
     }
 }
