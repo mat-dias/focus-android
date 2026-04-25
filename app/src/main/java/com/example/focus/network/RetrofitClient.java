@@ -1,4 +1,4 @@
-package com.example.focus;
+package com.example.focus.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

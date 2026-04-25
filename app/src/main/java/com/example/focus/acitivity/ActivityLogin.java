@@ -1,4 +1,4 @@
-package com.example.focus;
+package com.example.focus.acitivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,19 +8,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.focus.network.ApiService;
+import com.example.focus.responses.LoginResponse;
+import com.example.focus.R;
+import com.example.focus.network.RetrofitClient;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Activity de Login do usuário
- *
- * Responsável por:
- * - Verificar se usuário já está logado
- * - Validar campos
- * - Fazer login via API
- * - Salvar sessão no SharedPreferences
- */
 public class ActivityLogin extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
@@ -32,18 +29,16 @@ public class ActivityLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Verifica login automático
         SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
-        if(prefs.getBoolean("logado", false)) {
+        if (prefs.getBoolean("logado", false)) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
 
-        // Inicializa views
-        etEmail = findViewById(R.id.etEmail);
+        etEmail    = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin   = findViewById(R.id.btnLogin);
         tvCadastro = findViewById(R.id.tvCadastro);
 
         btnLogin.setOnClickListener(v -> fazerLogin());
@@ -52,21 +47,16 @@ public class ActivityLogin extends AppCompatActivity {
         );
     }
 
-    /**
-     * Executa o login via API
-     */
     private void fazerLogin() {
 
         String email = etEmail.getText().toString().trim();
         String senha = etPassword.getText().toString().trim();
 
-        // Validação simples
-        if(email.isEmpty() || senha.isEmpty()) {
+        if (email.isEmpty() || senha.isEmpty()) {
             Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Loading
         btnLogin.setText("Carregando...");
         btnLogin.setEnabled(false);
 
@@ -80,17 +70,18 @@ public class ActivityLogin extends AppCompatActivity {
                 btnLogin.setText("Entrar");
                 btnLogin.setEnabled(true);
 
-                if(response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
 
                     LoginResponse res = response.body();
 
-                    if("ok".equals(res.status)){
+                    if ("ok".equals(res.status)) {
 
-                        // Salva sessão
+                        // Salva tudo no SharedPreferences — incluindo profile_id
                         SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
                         prefs.edit()
                                 .putBoolean("logado", true)
-                                .putInt("user_id", res.id)
+                                .putInt("user_id", res.userId)
+                                .putInt("profile_id", res.profileId)
                                 .putString("nome", res.nome)
                                 .putString("email", res.email)
                                 .putInt("xp", res.xp)
@@ -116,10 +107,7 @@ public class ActivityLogin extends AppCompatActivity {
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 btnLogin.setText("Entrar");
                 btnLogin.setEnabled(true);
-
-                Toast.makeText(ActivityLogin.this,
-                        "Erro de conexão",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityLogin.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
             }
         });
     }

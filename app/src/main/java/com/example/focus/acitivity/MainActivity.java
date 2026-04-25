@@ -1,10 +1,15 @@
-package com.example.focus;
+package com.example.focus.acitivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.focus.AddTask.AddTaskHelper;
+import com.example.focus.NavBar.NavHelper;
+import com.example.focus.FocusMode.PomodoroController;
+import com.example.focus.R;
 
 public class MainActivity extends AppCompatActivity {
 

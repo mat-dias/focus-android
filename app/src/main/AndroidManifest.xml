@@ -16,16 +16,16 @@
         android:theme="@style/Theme.Focus"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ActivityGoals"
+            android:name=".acitivity.ActivityGoals"
             android:exported="false" />
         <activity
-            android:name=".ActivityStats"
+            android:name=".acitivity.ActivityStats"
             android:exported="false" />
         <activity
-            android:name=".ActivityProfile"
+            android:name=".acitivity.ActivityProfile"
             android:exported="false" /> <!-- LOGIN = TELA INICIAL -->
         <activity
-            android:name=".ActivityLogin"
+            android:name=".acitivity.ActivityLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,10 +34,10 @@
             </intent-filter>
         </activity> <!-- OUTRAS TELAS -->
         <activity
-            android:name=".ActivityRegister"
+            android:name=".acitivity.ActivityRegister"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".acitivity.MainActivity"
             android:exported="false" />
     </application>
 

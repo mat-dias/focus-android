@@ -1,4 +1,4 @@
-package com.example.focus;
+package com.example.focus.FocusMode;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;

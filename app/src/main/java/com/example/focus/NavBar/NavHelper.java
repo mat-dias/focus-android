@@ -1,10 +1,16 @@
-package com.example.focus;
+package com.example.focus.NavBar;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageButton;
+
+import com.example.focus.R;
+import com.example.focus.acitivity.ActivityGoals;
+import com.example.focus.acitivity.ActivityProfile;
+import com.example.focus.acitivity.ActivityStats;
+import com.example.focus.acitivity.MainActivity;
 
 public class NavHelper {
 

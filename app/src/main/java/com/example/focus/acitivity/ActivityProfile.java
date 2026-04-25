@@ -1,4 +1,4 @@
-package com.example.focus;
+package com.example.focus.acitivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -10,6 +10,10 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.focus.AddTask.AddTaskHelper;
+import com.example.focus.NavBar.NavHelper;
+import com.example.focus.R;
 
 public class ActivityProfile extends AppCompatActivity {
 

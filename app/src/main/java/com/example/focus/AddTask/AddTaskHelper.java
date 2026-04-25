@@ -1,9 +1,11 @@
-package com.example.focus;
+package com.example.focus.AddTask;
 
 import android.app.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
+
+import com.example.focus.R;
 
 public class AddTaskHelper {
 

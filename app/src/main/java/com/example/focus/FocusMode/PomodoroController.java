@@ -1,4 +1,4 @@
-package com.example.focus;
+package com.example.focus.FocusMode;
 
 import android.app.AlertDialog;
 import android.os.CountDownTimer;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.focus.R;
 
 public class PomodoroController {
 
