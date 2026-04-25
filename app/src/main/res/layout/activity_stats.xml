@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#0D0D0D">
 
-    <!-- ══ CONTEÚDO SCROLLÁVEL ════════════════════════════════════ -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -20,13 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- ══ HEADER ═══════════════════════════════════════════════ -->
+            <!-- ══ HEADER ════════════════════════════════════════════════ -->
             <LinearLayout
                 android:id="@+id/statsHeader"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center"
                 android:layout_marginTop="44dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
@@ -52,7 +50,7 @@
 
             </LinearLayout>
 
-            <!-- ══ STATS CARDS ═══════════════════════════════════════════ -->
+            <!-- ══ STREAK + XP ═══════════════════════════════════════════ -->
             <LinearLayout
                 android:id="@+id/statsCards"
                 android:layout_width="0dp"
@@ -70,7 +68,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/bg_stat_card"
                     android:orientation="vertical"
                     android:gravity="center"
@@ -86,9 +84,9 @@
                         android:id="@+id/txtStatsStreak"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="7"
+                        android:text="Carregando..."
                         android:textColor="#FFFFFF"
-                        android:textSize="28sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp"/>
 
@@ -99,6 +97,7 @@
                         android:textColor="#888888"
                         android:textSize="12sp"
                         android:layout_marginTop="4dp"/>
+
                 </LinearLayout>
 
                 <!-- XP -->
@@ -106,7 +105,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/bg_stat_card"
                     android:orientation="vertical"
                     android:gravity="center"
@@ -122,9 +121,9 @@
                         android:id="@+id/txtStatsXP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1.247 XP"
+                        android:text="Carregando..."
                         android:textColor="#FFFFFF"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginTop="8dp"/>
 
@@ -135,22 +134,22 @@
                         android:textColor="#888888"
                         android:textSize="12sp"
                         android:layout_marginTop="4dp"/>
+
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- ══ GRAFICO BARRAS SEMANAL ═════════════════════════════════ -->
+            <!-- ══ GRÁFICO SEMANAL ════════════════════════════════════════ -->
             <LinearLayout
                 android:id="@+id/chartWeeklyContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/bg_stat_card"
                 android:orientation="vertical"
                 android:padding="24dp"
-                android:minHeight="220dp"
                 app:layout_constraintTop_toBottomOf="@id/statsCards"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -164,83 +163,60 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp"/>
 
+                <!-- Barras injetadas pelo Java -->
                 <LinearLayout
                     android:id="@+id/chartWeeklyBars"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="140dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"/>
+                    android:gravity="bottom"
+                    android:layout_marginBottom="12dp">
+
+                    <!-- Placeholder carregando -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Carregando..."
+                        android:textColor="#888888"
+                        android:textSize="13sp"/>
+
+                </LinearLayout>
 
                 <!-- Labels dos dias -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="S"
-                        android:textColor="#888888"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="T"
-                        android:textColor="#888888"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Q"
-                        android:textColor="#888888"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Q"
-                        android:textColor="#888888"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="S"
-                        android:textColor="#888888"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="S"
-                        android:textColor="#888888"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="D"
-                        android:textColor="#888888"
-                        android:textSize="11sp"
-                        android:gravity="center"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="D" android:gravity="center"
+                        android:textColor="#888888" android:textSize="11sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="S" android:gravity="center"
+                        android:textColor="#888888" android:textSize="11sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="T" android:gravity="center"
+                        android:textColor="#888888" android:textSize="11sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="Q" android:gravity="center"
+                        android:textColor="#888888" android:textSize="11sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="Q" android:gravity="center"
+                        android:textColor="#888888" android:textSize="11sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="S" android:gravity="center"
+                        android:textColor="#888888" android:textSize="11sp"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="S" android:gravity="center"
+                        android:textColor="#888888" android:textSize="11sp"/>
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- ══ GRAFICO PIZZA MENSAL ═══════════════════════════════════ -->
+            <!-- ══ GRÁFICO MENSAL (TAGS) ══════════════════════════════════ -->
             <LinearLayout
                 android:id="@+id/chartMonthlyContainer"
                 android:layout_width="0dp"
@@ -248,11 +224,9 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="32dp"
                 android:background="@drawable/bg_stat_card"
                 android:orientation="vertical"
                 android:padding="24dp"
-                android:minHeight="240dp"
                 app:layout_constraintTop_toBottomOf="@id/chartWeeklyContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -260,108 +234,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Esse Mês"
+                    android:text="Esse Mês — Por Etiqueta"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="16dp"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_marginBottom="20dp">
+                    android:layout_gravity="center"
+                    android:text="Carregando..."
+                    android:textSize="40sp"
+                    android:layout_marginBottom="16dp"/>
 
-                    <!-- CÍRCULO PLACEHOLDER -->
-                    <View
-                        android:id="@+id/chartMonthlyPie"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        android:background="@drawable/circle_gradient_bg"
-                        android:elevation="2dp"/>
-
-                    <!-- TEXTO SIMPLES NO CENTRO -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="-60dp"
-                        android:text="📊"
-                        android:textSize="40sp"/>
-
-                </LinearLayout>
-
-                <!-- Legenda -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <!-- Legenda injetada pelo Java -->
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <View
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:background="#4ADE80"/>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Trabalho"
-                            android:textColor="#FFFFFF"
-                            android:textSize="13sp"
-                            android:layout_marginStart="12dp"/>
-                        <TextView
-                            android:id="@+id/txtWorkPercent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="62%"
-                            android:textColor="#4ADE80"
-                            android:textSize="13sp"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:background="#EC4899"/>
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Estudos"
-                            android:textColor="#FFFFFF"
-                            android:textSize="13sp"
-                            android:layout_marginStart="12dp"/>
-                        <TextView
-                            android:id="@+id/txtStudyPercent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="38%"
-                            android:textColor="#EC4899"
-                            android:textSize="13sp"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-
-                </LinearLayout>
+                    android:text="Carregando..."
+                    android:textColor="#888888"
+                    android:textSize="13sp"/>
 
             </LinearLayout>
 
-            <!-- ══ STATUS HOJE ═══════════════════════════════════════════ -->
+            <!-- ══ STATUS HOJE ════════════════════════════════════════════ -->
             <LinearLayout
                 android:id="@+id/todayStats"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="24dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="32dp"
@@ -383,7 +286,7 @@
                         android:id="@+id/txtTodayTasks"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12"
+                        android:text="--"
                         android:textColor="#FFFFFF"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
@@ -415,7 +318,7 @@
                         android:id="@+id/txtTodayCompleted"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="9"
+                        android:text="--"
                         android:textColor="#4ADE80"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
@@ -447,7 +350,7 @@
                         android:id="@+id/txtTodayXP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+156"
+                        android:text="--"
                         android:textColor="#EC4899"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
@@ -467,6 +370,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <!-- ══ BOTTOM NAV ════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
@@ -482,122 +386,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- HOME -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navHome"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_nav_home"
-                android:background="@android:color/transparent"
-                android:contentDescription="Início"
-                android:padding="0dp"/>
-
-            <TextView
-                android:id="@+id/lblHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Início"
-                android:textSize="9sp"
-                android:textColor="#555555"
-                android:layout_marginTop="3dp"/>
-
+                android:id="@+id/navHome" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_home" android:background="@android:color/transparent"
+                android:contentDescription="Início" android:padding="0dp"/>
+            <TextView android:id="@+id/lblHome" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Início"
+                android:textSize="9sp" android:textColor="#555555" android:layout_marginTop="3dp"/>
         </LinearLayout>
 
-        <!-- STATS -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navStats"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_nav_stats"
-                android:background="@android:color/transparent"
-                android:contentDescription="Stats"
-                android:padding="0dp"/>
-
-            <TextView
-                android:id="@+id/lblStats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Stats"
-                android:textSize="9sp"
-                android:textColor="#555555"
-                android:layout_marginTop="3dp"/>
-
+                android:id="@+id/navStats" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_stats" android:background="@android:color/transparent"
+                android:contentDescription="Stats" android:padding="0dp"/>
+            <TextView android:id="@+id/lblStats" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Stats"
+                android:textSize="9sp" android:textColor="#FFFFFF" android:layout_marginTop="3dp"/>
         </LinearLayout>
 
-        <!-- ESPAÇO PARA O FAB -->
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+        <Space android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
 
-        <!-- METAS -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navGoals"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_nav_goals"
-                android:background="@android:color/transparent"
-                android:contentDescription="Metas"
-                android:padding="0dp"/>
-
-            <TextView
-                android:id="@+id/lblGoals"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Metas"
-                android:textSize="9sp"
-                android:textColor="#555555"
-                android:layout_marginTop="3dp"/>
-
+                android:id="@+id/navGoals" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_goals" android:background="@android:color/transparent"
+                android:contentDescription="Metas" android:padding="0dp"/>
+            <TextView android:id="@+id/lblGoals" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Metas"
+                android:textSize="9sp" android:textColor="#555555" android:layout_marginTop="3dp"/>
         </LinearLayout>
 
-        <!-- PERFIL -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
             <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navProfile"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_nav_profile"
-                android:background="@android:color/transparent"
-                android:contentDescription="Perfil"
-                android:padding="0dp"/>
-
-            <TextView
-                android:id="@+id/lblProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Perfil"
-                android:textSize="9sp"
-                android:textColor="#555555"
-                android:layout_marginTop="3dp"/>
-
+                android:id="@+id/navProfile" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_profile" android:background="@android:color/transparent"
+                android:contentDescription="Perfil" android:padding="0dp"/>
+            <TextView android:id="@+id/lblProfile" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Perfil"
+                android:textSize="9sp" android:textColor="#555555" android:layout_marginTop="3dp"/>
         </LinearLayout>
 
     </LinearLayout>
