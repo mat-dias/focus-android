@@ -2,6 +2,7 @@ package com.example.focus.network;
 
 import com.example.focus.responses.BasicResponse;
 import com.example.focus.responses.LoginResponse;
+import com.example.focus.responses.TaskResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -32,5 +33,11 @@ public interface ApiService {
             @Field("title") String title,
             @Field("priority") String priority,
             @Field("tag") String tag
+    );
+
+    @FormUrlEncoded
+    @POST("get_tasks.php")
+    Call<TaskResponse> getTasks(
+            @Field("profile_id") int profileId
     );
 }
