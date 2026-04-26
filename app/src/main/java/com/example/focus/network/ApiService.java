@@ -4,11 +4,16 @@ import com.example.focus.responses.BasicResponse;
 import com.example.focus.responses.LoginResponse;
 import com.example.focus.responses.StatsResponse;
 import com.example.focus.responses.TaskResponse;
+import com.example.focus.responses.UpdateProfileResponse;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 public interface ApiService {
 
@@ -61,5 +66,17 @@ public interface ApiService {
     @POST("get_stats.php")
     Call<StatsResponse> getStats(
             @Field("profile_id") int profileId
+    );
+
+    // Multipart para suportar upload de foto + campos de texto juntos
+    @Multipart
+    @POST("update_profile.php")
+    Call<UpdateProfileResponse> updateProfile(
+            @Part("user_id")    RequestBody userId,
+            @Part("profile_id") RequestBody profileId,
+            @Part("nome")       RequestBody nome,
+            @Part("email")      RequestBody email,
+            @Part("senha")      RequestBody senha,
+            @Part MultipartBody.Part foto  // nullable
     );
 }

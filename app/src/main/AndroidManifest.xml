@@ -39,6 +39,8 @@
         <activity
             android:name=".acitivity.MainActivity"
             android:exported="false" />
+        <activity android:name=".acitivity.ActivityEditProfile"
+            android:exported="false" />
     </application>
 
 </manifest>
