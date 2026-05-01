@@ -16,8 +16,8 @@ import com.example.focus.NavBar.NavHelper;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 
-import com.example.focus.responses.BasicResponse;
 import com.example.focus.R;
+import com.example.focus.responses.BasicResponse;
 import com.example.focus.responses.TaskResponse;
 import com.example.focus.network.ApiService;
 import com.example.focus.network.RetrofitClient;
@@ -67,23 +67,19 @@ public class ActivityGoals extends AppCompatActivity {
 
     // ── Carrega tasks ─────────────────────────────────────────────────────────
     private void carregarTasks() {
-
         if (profileId == 0) {
             Toast.makeText(this, "Sessão inválida", Toast.LENGTH_SHORT).show();
             return;
         }
 
         ApiService api = RetrofitClient.getClient().create(ApiService.class);
-
         api.getTasks(profileId).enqueue(new Callback<TaskResponse>() {
-
             @Override
             public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
                 if (!response.isSuccessful()
                         || response.body() == null
                         || !"ok".equals(response.body().status)) {
-                    Toast.makeText(ActivityGoals.this,
-                            "Erro ao carregar tarefas", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityGoals.this, "Erro ao carregar tarefas", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 TaskResponse res = response.body();
@@ -99,7 +95,6 @@ public class ActivityGoals extends AppCompatActivity {
 
     // ── Renderiza ─────────────────────────────────────────────────────────────
     private void renderizarTasks(List<TaskResponse.TaskItem> tasks, int total, int concluidas) {
-
         txtGoalsTotal.setText(String.valueOf(total));
         txtGoalsCompleted.setText(String.valueOf(concluidas));
 
@@ -131,30 +126,25 @@ public class ActivityGoals extends AppCompatActivity {
 
     // ── Card ──────────────────────────────────────────────────────────────────
     private View criarCard(TaskResponse.TaskItem task) {
-
         int dp = (int) getResources().getDisplayMetrics().density;
 
-        // Card raiz
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
         card.setPadding(20 * dp, 16 * dp, 12 * dp, 16 * dp);
         card.setBackgroundResource(R.drawable.bg_stat_card);
         card.setElevation(2 * dp);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         cardParams.setMargins(0, 0, 0, 12 * dp);
         card.setLayoutParams(cardParams);
 
-        // ── Linha principal: check | título+tag | 3 pontinhos ────────────────
         LinearLayout rowMain = new LinearLayout(this);
         rowMain.setOrientation(LinearLayout.HORIZONTAL);
         rowMain.setGravity(Gravity.CENTER_VERTICAL);
         rowMain.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        // Botão CHECK ✓ / ○
+        // ── Botão CHECK ───────────────────────────────────────────────────────
         ImageButton btnCheck = new ImageButton(this);
         btnCheck.setBackgroundColor(Color.TRANSPARENT);
         LinearLayout.LayoutParams checkParams = new LinearLayout.LayoutParams(40 * dp, 40 * dp);
@@ -168,41 +158,44 @@ public class ActivityGoals extends AppCompatActivity {
             atualizarBotaoCheck(btnCheck, novoDone);
 
             ApiService api = RetrofitClient.getClient().create(ApiService.class);
-            api.updateTaskDone(task.taskId, profileId, novoDone ? 1 : 0)
-                    .enqueue(new Callback<BasicResponse>() {
-                        @Override
-                        public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
-                            if (response.body() != null && "ok".equals(response.body().status)) {
-                                carregarTasks(); // recarrega pra mover entre seções
-                            } else {
-                                task.done = !novoDone; // reverte
-                                atualizarBotaoCheck(btnCheck, task.done);
-                                Toast.makeText(ActivityGoals.this, "Erro ao atualizar", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<BasicResponse> call, Throwable t) {
-                            task.done = !novoDone;
-                            atualizarBotaoCheck(btnCheck, task.done);
-                            Toast.makeText(ActivityGoals.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            api.updateTaskDone(
+                    task.taskId,
+                    profileId,
+                    novoDone ? 1 : 0,
+                    task.schedulingId != null ? task.schedulingId : 0,
+                    task.scheduleId   != null ? task.scheduleId   : 0
+            ).enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
+                    if (response.body() != null && "ok".equals(response.body().status)) {
+                        carregarTasks();
+                    } else {
+                        task.done = !novoDone;
+                        atualizarBotaoCheck(btnCheck, task.done);
+                        Toast.makeText(ActivityGoals.this, "Erro ao atualizar", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override
+                public void onFailure(Call<BasicResponse> call, Throwable t) {
+                    task.done = !novoDone;
+                    atualizarBotaoCheck(btnCheck, task.done);
+                    Toast.makeText(ActivityGoals.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         rowMain.addView(btnCheck);
 
-        // Coluna central: título + tag
+        // ── Coluna central ────────────────────────────────────────────────────
         LinearLayout colCenter = new LinearLayout(this);
         colCenter.setOrientation(LinearLayout.VERTICAL);
-        colCenter.setLayoutParams(new LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        colCenter.setLayoutParams(new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
-        // Linha do título + badge de prioridade
         LinearLayout rowTitulo = new LinearLayout(this);
         rowTitulo.setOrientation(LinearLayout.HORIZONTAL);
         rowTitulo.setGravity(Gravity.CENTER_VERTICAL);
 
-        // Bolinha de prioridade
         View dot = new View(this);
         LinearLayout.LayoutParams dotParams = new LinearLayout.LayoutParams(8 * dp, 8 * dp);
         dotParams.setMarginEnd(8 * dp);
@@ -212,22 +205,18 @@ public class ActivityGoals extends AppCompatActivity {
 
         TextView tvTitle = new TextView(this);
         tvTitle.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         tvTitle.setText(task.title);
         tvTitle.setTextColor(task.done ? Color.parseColor("#888888") : Color.WHITE);
         tvTitle.setTextSize(15);
         tvTitle.setTypeface(null, android.graphics.Typeface.BOLD);
         rowTitulo.addView(tvTitle);
-
         colCenter.addView(rowTitulo);
 
-        // Tag (se houver)
         if (task.tag != null && !task.tag.isEmpty()) {
             TextView tvTag = new TextView(this);
             LinearLayout.LayoutParams tagParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             tagParams.setMargins(16 * dp, 4 * dp, 0, 0);
             tvTag.setLayoutParams(tagParams);
             tvTag.setText("#" + task.tag);
@@ -238,41 +227,29 @@ public class ActivityGoals extends AppCompatActivity {
 
         rowMain.addView(colCenter);
 
-        // Botão 3 PONTINHOS ⋮
+        // ── Botão 3 pontinhos ─────────────────────────────────────────────────
         ImageButton btnMenu = new ImageButton(this);
         btnMenu.setBackgroundColor(Color.TRANSPARENT);
-        LinearLayout.LayoutParams menuParams = new LinearLayout.LayoutParams(40 * dp, 40 * dp);
-        btnMenu.setLayoutParams(menuParams);
-        // Usa ícone nativo de overflow (3 pontinhos verticais)
+        btnMenu.setLayoutParams(new LinearLayout.LayoutParams(40 * dp, 40 * dp));
         btnMenu.setImageResource(android.R.drawable.ic_menu_more);
         btnMenu.setColorFilter(Color.parseColor("#888888"));
 
         btnMenu.setOnClickListener(v -> {
             androidx.appcompat.widget.PopupMenu popup =
                     new androidx.appcompat.widget.PopupMenu(this, btnMenu);
-
-            // Opções do menu
             popup.getMenu().add(0, 1, 0, "🗑️  Deletar tarefa");
-            // Futuramente: popup.getMenu().add(0, 2, 1, "✏️  Editar tarefa");
-
             popup.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == 1) {
-                    confirmarDelecao(task.taskId);
-                    return true;
-                }
+                if (item.getItemId() == 1) { confirmarDelecao(task.taskId); return true; }
                 return false;
             });
-
             popup.show();
         });
 
         rowMain.addView(btnMenu);
         card.addView(rowMain);
-
         return card;
     }
 
-    // ── Aparência do botão check ──────────────────────────────────────────────
     private void atualizarBotaoCheck(ImageButton btn, boolean done) {
         if (done) {
             btn.setImageResource(android.R.drawable.checkbox_on_background);
@@ -283,7 +260,6 @@ public class ActivityGoals extends AppCompatActivity {
         }
     }
 
-    // ── Deletar com confirmação ───────────────────────────────────────────────
     private void confirmarDelecao(int taskId) {
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Deletar tarefa")
@@ -312,7 +288,6 @@ public class ActivityGoals extends AppCompatActivity {
         });
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
     private View criarMensagemVazia(String msg) {
         int dp = (int) getResources().getDisplayMetrics().density;
         TextView tv = new TextView(this);
@@ -320,8 +295,7 @@ public class ActivityGoals extends AppCompatActivity {
         tv.setTextColor(Color.parseColor("#666666"));
         tv.setTextSize(13);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 0, 0, 12 * dp);
         tv.setLayoutParams(lp);
         return tv;

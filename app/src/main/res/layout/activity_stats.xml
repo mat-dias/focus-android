@@ -15,22 +15,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
 
-            <!-- ══ HEADER ════════════════════════════════════════════════ -->
+            <!-- ══ HEADER ════════════════════════════════════════════ -->
             <LinearLayout
-                android:id="@+id/statsHeader"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="44dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -39,7 +38,6 @@
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold"/>
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,57 +45,93 @@
                     android:textColor="#888888"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- ══ FILTRO PERÍODO ═════════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="6dp">
+
+                <LinearLayout
+                    android:id="@+id/btnPeriodoSemana"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Semana"
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnPeriodoMes"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mês"
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnPeriodoTotal"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total"
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
 
             </LinearLayout>
 
-            <!-- ══ STREAK + XP ═══════════════════════════════════════════ -->
+            <!-- ══ STREAK + XP + NÍVEL ═══════════════════════════════ -->
             <LinearLayout
-                android:id="@+id/statsCards"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="24dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
-                app:layout_constraintTop_toBottomOf="@id/statsHeader"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_marginBottom="16dp">
 
                 <!-- STREAK -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="6dp"
                     android:background="@drawable/bg_stat_card"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🔥"
-                        android:textSize="28sp"/>
-
-                    <TextView
-                        android:id="@+id/txtStatsStreak"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Carregando..."
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Streak Atual"
-                        android:textColor="#888888"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp"/>
-
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="🔥" android:textSize="24sp"/>
+                    <TextView android:id="@+id/txtStatsStreak"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#FFFFFF"
+                        android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="6dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Streak" android:textColor="#888888" android:textSize="11sp"/>
                 </LinearLayout>
 
                 <!-- XP -->
@@ -105,74 +139,230 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
                     android:background="@drawable/bg_stat_card"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="20dp">
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="⭐" android:textSize="24sp"/>
+                    <TextView android:id="@+id/txtStatsXP"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#FFFFFF"
+                        android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="6dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="XP Total" android:textColor="#888888" android:textSize="11sp"/>
+                </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="⭐"
-                        android:textSize="28sp"/>
-
-                    <TextView
-                        android:id="@+id/txtStatsXP"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Carregando..."
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total Ganho"
-                        android:textColor="#888888"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp"/>
-
+                <!-- NÍVEL -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="🏆" android:textSize="24sp"/>
+                    <TextView android:id="@+id/txtNivel"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#FFAA44"
+                        android:textSize="16sp" android:textStyle="bold" android:layout_marginTop="6dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Nível" android:textColor="#888888" android:textSize="11sp"/>
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- ══ GRÁFICO SEMANAL ════════════════════════════════════════ -->
+            <!-- ══ PROGRESSO DE XP ════════════════════════════════════ -->
             <LinearLayout
-                android:id="@+id/chartWeeklyContainer"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/bg_stat_card"
                 android:orientation="vertical"
-                android:padding="24dp"
-                app:layout_constraintTop_toBottomOf="@id/statsCards"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Progresso de XP"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/txtXpProgresso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textColor="#FFAA44"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="#2A2A2A">
+                    <View
+                        android:id="@+id/barXpFill"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="#FFAA44"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ══ STATUS HOJE ════════════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Essa Semana"
+                    android:text="Hoje"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Barras injetadas pelo Java -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                        <TextView android:id="@+id/txtTodayTasks"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="--" android:textColor="#FFFFFF" android:textSize="24sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Total" android:textColor="#888888" android:textSize="11sp"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="1dp" android:layout_height="40dp" android:background="#333333"/>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                        <TextView android:id="@+id/txtTodayCompleted"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="--" android:textColor="#4ADE80" android:textSize="24sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Feitas" android:textColor="#888888" android:textSize="11sp"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="1dp" android:layout_height="40dp" android:background="#333333"/>
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                        <TextView android:id="@+id/txtTodayXP"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="--" android:textColor="#EC4899" android:textSize="24sp" android:textStyle="bold"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="XP Hoje" android:textColor="#888888" android:textSize="11sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Taxa de hoje -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="Taxa de hoje"
+                        android:textColor="#888888" android:textSize="12sp"/>
+                    <TextView android:id="@+id/txtTaxaHoje"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#4ADE80" android:textSize="12sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="8dp" android:background="#2A2A2A">
+                    <View android:id="@+id/barTaxaHojeFill" android:layout_width="0dp"
+                        android:layout_height="match_parent" android:background="#4ADE80"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ══ TAXA DO PERÍODO ════════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="20dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:layout_marginBottom="6dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="Taxa de Conclusão"
+                        android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/>
+                    <TextView android:id="@+id/txtTaxaConclusao"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#06B6D4" android:textSize="20sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <TextView android:id="@+id/txtConcluidasPeriodo"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="-- de --" android:textColor="#888888" android:textSize="12sp"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="12dp" android:background="#2A2A2A">
+                    <View android:id="@+id/barTaxaFill" android:layout_width="0dp"
+                        android:layout_height="match_parent" android:background="#06B6D4"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ══ GRÁFICO BARRAS 7 DIAS ══════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Últimos 7 Dias"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
+
                 <LinearLayout
                     android:id="@+id/chartWeeklyBars"
                     android:layout_width="match_parent"
                     android:layout_height="140dp"
                     android:orientation="horizontal"
-                    android:gravity="bottom"
-                    android:layout_marginBottom="12dp">
+                    android:gravity="bottom">
 
-                    <!-- Placeholder carregando -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -184,189 +374,155 @@
 
                 </LinearLayout>
 
-                <!-- Labels dos dias -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="D" android:gravity="center"
-                        android:textColor="#888888" android:textSize="11sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="S" android:gravity="center"
-                        android:textColor="#888888" android:textSize="11sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="T" android:gravity="center"
-                        android:textColor="#888888" android:textSize="11sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="Q" android:gravity="center"
-                        android:textColor="#888888" android:textSize="11sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="Q" android:gravity="center"
-                        android:textColor="#888888" android:textSize="11sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="S" android:gravity="center"
-                        android:textColor="#888888" android:textSize="11sp"/>
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="S" android:gravity="center"
-                        android:textColor="#888888" android:textSize="11sp"/>
-
-                </LinearLayout>
-
             </LinearLayout>
 
-            <!-- ══ GRÁFICO MENSAL (TAGS) ══════════════════════════════════ -->
+            <!-- ══ POR PRIORIDADE ═════════════════════════════════════ -->
             <LinearLayout
-                android:id="@+id/chartMonthlyContainer"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/bg_stat_card"
                 android:orientation="vertical"
-                android:padding="24dp"
-                app:layout_constraintTop_toBottomOf="@id/chartWeeklyContainer"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Esse Mês — Por Etiqueta"
+                    android:text="Por Prioridade"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp"/>
 
+                <!-- Alta -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:layout_marginBottom="6dp" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:id="@+id/txtPrioHigh"
+                        android:text="-- Alta" android:textColor="#FF6B8A" android:textSize="13sp"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="8dp"
+                    android:background="#2A2A2A" android:layout_marginBottom="12dp">
+                    <View android:id="@+id/barHighFill" android:layout_width="0dp"
+                        android:layout_height="match_parent" android:background="#FF6B8A"/>
+                </LinearLayout>
+
+                <!-- Média -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:layout_marginBottom="6dp" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:id="@+id/txtPrioMedium"
+                        android:text="-- Média" android:textColor="#FFAA44" android:textSize="13sp"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="8dp"
+                    android:background="#2A2A2A" android:layout_marginBottom="12dp">
+                    <View android:id="@+id/barMediumFill" android:layout_width="0dp"
+                        android:layout_height="match_parent" android:background="#FFAA44"/>
+                </LinearLayout>
+
+                <!-- Baixa -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:layout_marginBottom="6dp" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:id="@+id/txtPrioLow"
+                        android:text="-- Baixa" android:textColor="#4ADE80" android:textSize="13sp"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="8dp"
+                    android:background="#2A2A2A">
+                    <View android:id="@+id/barLowFill" android:layout_width="0dp"
+                        android:layout_height="match_parent" android:background="#4ADE80"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ══ HISTÓRICO ══════════════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_stat_card" android:orientation="vertical"
+                    android:gravity="center" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="🏅" android:textSize="22sp"/>
+                    <TextView android:id="@+id/txtMelhorStreak"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#FFAA44" android:textSize="22sp"
+                        android:textStyle="bold" android:layout_marginTop="4dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Melhor Streak" android:textColor="#888888" android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginStart="6dp" android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_stat_card" android:orientation="vertical"
+                    android:gravity="center" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="📅" android:textSize="22sp"/>
+                    <TextView android:id="@+id/txtDiasAtivos"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#06B6D4" android:textSize="22sp"
+                        android:textStyle="bold" android:layout_marginTop="4dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Dias Ativos" android:textColor="#888888" android:textSize="10sp"/>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_stat_card" android:orientation="vertical"
+                    android:gravity="center" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="⚡" android:textSize="22sp"/>
+                    <TextView android:id="@+id/txtDiasSemana"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="--" android:textColor="#A78BFA" android:textSize="16sp"
+                        android:textStyle="bold" android:layout_marginTop="4dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Esta Semana" android:textColor="#888888" android:textSize="10sp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ══ PIZZA — POR ETIQUETA ══════════════════════════════ -->
+            <LinearLayout
+                android:id="@+id/chartMonthlyContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="20dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Por Etiqueta"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
+
+                <com.example.focus.views.PieChartView
+                    android:id="@+id/pieChart"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     android:layout_gravity="center"
-                    android:text="Carregando..."
-                    android:textSize="40sp"
                     android:layout_marginBottom="16dp"/>
 
                 <!-- Legenda injetada pelo Java -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Carregando..."
-                    android:textColor="#888888"
-                    android:textSize="13sp"/>
 
             </LinearLayout>
 
-            <!-- ══ STATUS HOJE ════════════════════════════════════════════ -->
-            <LinearLayout
-                android:id="@+id/todayStats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="32dp"
-                android:background="@drawable/bg_stat_card"
-                android:padding="20dp"
-                android:elevation="4dp"
-                app:layout_constraintTop_toBottomOf="@id/chartMonthlyContainer"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/txtTodayTasks"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="#FFFFFF"
-                        android:textSize="24sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tarefas Hoje"
-                        android:textColor="#888888"
-                        android:textSize="12sp"/>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="40dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/txtTodayCompleted"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="#4ADE80"
-                        android:textSize="24sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Concluídas"
-                        android:textColor="#888888"
-                        android:textSize="12sp"/>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="40dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/txtTodayXP"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="#EC4899"
-                        android:textSize="24sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="XP Hoje"
-                        android:textColor="#888888"
-                        android:textSize="12sp"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
@@ -388,8 +544,8 @@
 
         <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
             android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navHome" android:layout_width="30dp" android:layout_height="30dp"
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/navHome"
+                android:layout_width="30dp" android:layout_height="30dp"
                 android:src="@drawable/ic_nav_home" android:background="@android:color/transparent"
                 android:contentDescription="Início" android:padding="0dp"/>
             <TextView android:id="@+id/lblHome" android:layout_width="wrap_content"
@@ -399,8 +555,8 @@
 
         <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
             android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navStats" android:layout_width="30dp" android:layout_height="30dp"
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/navStats"
+                android:layout_width="30dp" android:layout_height="30dp"
                 android:src="@drawable/ic_nav_stats" android:background="@android:color/transparent"
                 android:contentDescription="Stats" android:padding="0dp"/>
             <TextView android:id="@+id/lblStats" android:layout_width="wrap_content"
@@ -412,8 +568,8 @@
 
         <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
             android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navGoals" android:layout_width="30dp" android:layout_height="30dp"
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/navGoals"
+                android:layout_width="30dp" android:layout_height="30dp"
                 android:src="@drawable/ic_nav_goals" android:background="@android:color/transparent"
                 android:contentDescription="Metas" android:padding="0dp"/>
             <TextView android:id="@+id/lblGoals" android:layout_width="wrap_content"
@@ -423,8 +579,8 @@
 
         <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
             android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/navProfile" android:layout_width="30dp" android:layout_height="30dp"
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/navProfile"
+                android:layout_width="30dp" android:layout_height="30dp"
                 android:src="@drawable/ic_nav_profile" android:background="@android:color/transparent"
                 android:contentDescription="Perfil" android:padding="0dp"/>
             <TextView android:id="@+id/lblProfile" android:layout_width="wrap_content"
@@ -434,17 +590,13 @@
 
     </LinearLayout>
 
-    <!-- ══ FAB CENTRAL ═════════════════════════════════════════════ -->
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnAdd"
-        android:layout_width="62dp"
-        android:layout_height="62dp"
+        android:layout_width="62dp" android:layout_height="62dp"
         android:background="@drawable/circle_gradient_bg"
         android:src="@android:drawable/ic_input_add"
-        android:padding="16dp"
-        android:contentDescription="Adicionar tarefa"
-        app:tint="#FFFFFF"
-        android:elevation="20dp"
+        android:padding="16dp" android:contentDescription="Adicionar tarefa"
+        app:tint="#FFFFFF" android:elevation="20dp"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

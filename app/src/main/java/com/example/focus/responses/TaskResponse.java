@@ -13,6 +13,9 @@ public class TaskResponse {
     @SerializedName("concluidas")
     public int concluidas;
 
+    @SerializedName("today")
+    public String today;
+
     @SerializedName("tasks")
     public List<TaskItem> tasks;
 
@@ -32,5 +35,12 @@ public class TaskResponse {
 
         @SerializedName("tag")
         public String tag;
+
+        // IDs necessários para marcar done no scheduling correto
+        @SerializedName("scheduling_id")
+        public Integer schedulingId; // null se ainda não foi marcada hoje
+
+        @SerializedName("schedule_id")
+        public Integer scheduleId;   // null se não tem schedule hoje ainda
     }
 }
