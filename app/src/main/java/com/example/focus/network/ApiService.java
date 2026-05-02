@@ -32,6 +32,9 @@ public interface ApiService {
     @FormUrlEncoded @POST("update_task_done.php")
     Call<BasicResponse> updateTaskDone(@Field("task_id") int taskId, @Field("profile_id") int profileId, @Field("done") int done, @Field("scheduling_id") int schedulingId, @Field("schedule_id") int scheduleId);
 
+    @FormUrlEncoded @POST("edit_task.php")
+    Call<BasicResponse> editTask(@Field("task_id") int taskId, @Field("profile_id") int profileId, @Field("title") String title, @Field("priority") String priority, @Field("tag") String tag);
+
     @FormUrlEncoded @POST("delete_task.php")
     Call<BasicResponse> deleteTask(@Field("task_id") int taskId, @Field("profile_id") int profileId);
 

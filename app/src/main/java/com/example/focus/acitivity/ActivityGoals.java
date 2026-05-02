@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.focus.AddTask.AddTaskBottomSheet;
+import com.example.focus.editTask.EditTaskBottomSheet;
 import com.example.focus.NavBar.NavHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -144,7 +145,7 @@ public class ActivityGoals extends AppCompatActivity {
         rowMain.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        // ── Botão CHECK ───────────────────────────────────────────────────────
+        // ── CHECK ─────────────────────────────────────────────────────────────
         ImageButton btnCheck = new ImageButton(this);
         btnCheck.setBackgroundColor(Color.TRANSPARENT);
         LinearLayout.LayoutParams checkParams = new LinearLayout.LayoutParams(40 * dp, 40 * dp);
@@ -159,9 +160,7 @@ public class ActivityGoals extends AppCompatActivity {
 
             ApiService api = RetrofitClient.getClient().create(ApiService.class);
             api.updateTaskDone(
-                    task.taskId,
-                    profileId,
-                    novoDone ? 1 : 0,
+                    task.taskId, profileId, novoDone ? 1 : 0,
                     task.schedulingId != null ? task.schedulingId : 0,
                     task.scheduleId   != null ? task.scheduleId   : 0
             ).enqueue(new Callback<BasicResponse>() {
@@ -227,7 +226,7 @@ public class ActivityGoals extends AppCompatActivity {
 
         rowMain.addView(colCenter);
 
-        // ── Botão 3 pontinhos ─────────────────────────────────────────────────
+        // ── 3 PONTINHOS ───────────────────────────────────────────────────────
         ImageButton btnMenu = new ImageButton(this);
         btnMenu.setBackgroundColor(Color.TRANSPARENT);
         btnMenu.setLayoutParams(new LinearLayout.LayoutParams(40 * dp, 40 * dp));
@@ -237,9 +236,19 @@ public class ActivityGoals extends AppCompatActivity {
         btnMenu.setOnClickListener(v -> {
             androidx.appcompat.widget.PopupMenu popup =
                     new androidx.appcompat.widget.PopupMenu(this, btnMenu);
-            popup.getMenu().add(0, 1, 0, "🗑️  Deletar tarefa");
+
+            popup.getMenu().add(0, 1, 0, "✏️  Editar tarefa");
+            popup.getMenu().add(0, 2, 1, "🗑️  Deletar tarefa");
+
             popup.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == 1) { confirmarDelecao(task.taskId); return true; }
+                if (item.getItemId() == 1) {
+                    abrirEdicao(task);
+                    return true;
+                }
+                if (item.getItemId() == 2) {
+                    confirmarDelecao(task.taskId);
+                    return true;
+                }
                 return false;
             });
             popup.show();
@@ -250,6 +259,14 @@ public class ActivityGoals extends AppCompatActivity {
         return card;
     }
 
+    // ── Abre bottom sheet de edição ───────────────────────────────────────────
+    private void abrirEdicao(TaskResponse.TaskItem task) {
+        EditTaskBottomSheet sheet = new EditTaskBottomSheet(task, profileId);
+        sheet.setOnSavedListener(this::carregarTasks);
+        sheet.show(getSupportFragmentManager(), "EditTask");
+    }
+
+    // ── Check ─────────────────────────────────────────────────────────────────
     private void atualizarBotaoCheck(ImageButton btn, boolean done) {
         if (done) {
             btn.setImageResource(android.R.drawable.checkbox_on_background);
@@ -260,6 +277,7 @@ public class ActivityGoals extends AppCompatActivity {
         }
     }
 
+    // ── Deletar ───────────────────────────────────────────────────────────────
     private void confirmarDelecao(int taskId) {
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Deletar tarefa")
@@ -288,6 +306,7 @@ public class ActivityGoals extends AppCompatActivity {
         });
     }
 
+    // ── Helpers ───────────────────────────────────────────────────────────────
     private View criarMensagemVazia(String msg) {
         int dp = (int) getResources().getDisplayMetrics().density;
         TextView tv = new TextView(this);
