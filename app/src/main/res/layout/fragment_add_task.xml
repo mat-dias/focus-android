@@ -28,7 +28,7 @@
         android:text="Nova tarefa"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <!-- Label: Título -->
     <TextView
@@ -41,7 +41,7 @@
         android:letterSpacing="0.08"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Campo de título da tarefa (máx. 60 chars — tasks.title) -->
+    <!-- Campo de título -->
     <EditText
         android:id="@+id/etTaskTitle"
         android:layout_width="match_parent"
@@ -68,14 +68,13 @@
         android:letterSpacing="0.08"
         android:layout_marginBottom="10dp"/>
 
-    <!-- Grupo de pills de prioridade (enum: high, medium, low) -->
+    <!-- Pills de prioridade -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="18dp">
 
-        <!-- Prioridade ALTA -->
         <TextView
             android:id="@+id/pillHigh"
             android:layout_width="0dp"
@@ -89,7 +88,6 @@
             android:textColor="#FF6B8A"
             android:layout_marginEnd="8dp"/>
 
-        <!-- Prioridade MÉDIA -->
         <TextView
             android:id="@+id/pillMedium"
             android:layout_width="0dp"
@@ -103,7 +101,6 @@
             android:textColor="#666666"
             android:layout_marginEnd="8dp"/>
 
-        <!-- Prioridade BAIXA -->
         <TextView
             android:id="@+id/pillLow"
             android:layout_width="0dp"
@@ -118,7 +115,7 @@
 
     </LinearLayout>
 
-    <!-- Label: Etiqueta (tag) -->
+    <!-- Label: Etiqueta -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -129,7 +126,7 @@
         android:letterSpacing="0.08"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Campo de tag com prefixo # (tasks.tag — máx. 35 chars) -->
+    <!-- Campo de tag -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -164,8 +161,8 @@
 
     </LinearLayout>
 
-    <!-- Botão de confirmar — reutiliza btn_gradient_primary do main -->
-    <Button
+    <!-- Botão confirmar — mesmo estilo do btnStart -->
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnConfirmTask"
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -174,6 +171,7 @@
         android:textSize="15sp"
         android:textStyle="bold"
         android:background="@drawable/btn_gradient_primary"
-        android:elevation="6dp"/>
+        android:stateListAnimator="@null"
+        android:elevation="8dp"/>
 
 </LinearLayout>
