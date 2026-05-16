@@ -37,6 +37,7 @@
         <activity android:name=".acitivity.ActivityStats"      android:exported="false"/>
         <activity android:name=".acitivity.ActivityProfile"    android:exported="false"/>
         <activity android:name=".acitivity.ActivityEditProfile" android:exported="false"/>
+        <activity android:name=".acitivity.ActivityNotifications" android:exported="false"/>
 
         <!-- ══ RECEIVERS ═══════════════════════════════════════════════ -->
 

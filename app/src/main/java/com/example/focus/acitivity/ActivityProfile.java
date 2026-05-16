@@ -93,9 +93,10 @@ public class ActivityProfile extends AppCompatActivity {
             overridePendingTransition(0, 0);
         });
 
-        btnNotifications.setOnClickListener(v ->
-                Toast.makeText(this, "Em breve: notificações", Toast.LENGTH_SHORT).show()
-        );
+        btnNotifications.setOnClickListener(v -> {
+            startActivity(new Intent(this, ActivityNotifications.class));
+            overridePendingTransition(0, 0);
+        });
 
         btnAbout.setOnClickListener(v ->
                 new AlertDialog.Builder(this)

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D0D0D">
+
+    <!-- ══ TOOLBAR ══════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="44dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_nav_profile"
+            android:background="@drawable/bg_stat_card"
+            android:padding="8dp"
+            android:contentDescription="Voltar"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Notificações"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginStart="14dp"/>
+
+    </LinearLayout>
+
+    <!-- ══ SCROLL CONTENT ════════════════════════════════════════════ -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- ── Seção geral ───────────────────────────────────── -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GERAL"
+                android:textColor="#555555"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Card master toggle -->
+            <LinearLayout
+                android:id="@+id/cardMaster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_stat_card"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="18dp">
+
+                <!-- Ícone gradiente -->
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:src="@drawable/icon_notification"
+                    android:background="@drawable/circle_gradient_bg"
+                    android:padding="10dp"
+                    android:contentDescription="Notificações"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Notificações"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Permite receber lembretes do Focus"
+                        android:textColor="#666666"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/switchMaster"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:thumb="@null"
+                    android:track="@null"/>
+
+            </LinearLayout>
+
+            <!-- ── Seção lembretes ───────────────────────────────── -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LEMBRETES DIÁRIOS"
+                android:textColor="#555555"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Card Manhã -->
+            <LinearLayout
+                android:id="@+id/cardMorning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_stat_card"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:text="☀️"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_icon_morning"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manhã"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Comece o dia com foco"
+                        android:textColor="#666666"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/badgeMorning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="09:00"
+                    android:textColor="#EC4899"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_badge_pink"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_marginEnd="12dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <Switch
+                    android:id="@+id/switchMorning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:thumb="@null"
+                    android:track="@null"/>
+
+            </LinearLayout>
+
+            <!-- Card Tarde -->
+            <LinearLayout
+                android:id="@+id/cardAfternoon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_stat_card"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:text="🌤️"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_icon_afternoon"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tarde"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mantenha o ritmo das tarefas"
+                        android:textColor="#666666"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/badgeAfternoon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15:00"
+                    android:textColor="#EC4899"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_badge_pink"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_marginEnd="12dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <Switch
+                    android:id="@+id/switchAfternoon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:thumb="@null"
+                    android:track="@null"/>
+
+            </LinearLayout>
+
+            <!-- Card Noite -->
+            <LinearLayout
+                android:id="@+id/cardNight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_stat_card"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:text="🌙"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_icon_night"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Noite"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Revise o progresso do dia"
+                        android:textColor="#666666"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/badgeNight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="21:00"
+                    android:textColor="#EC4899"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_badge_pink"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_marginEnd="12dp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <Switch
+                    android:id="@+id/switchNight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:thumb="@null"
+                    android:track="@null"/>
+
+            </LinearLayout>
+
+            <!-- ── Dica ─────────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_tip_pink"
+                android:orientation="horizontal"
+                android:padding="14dp"
+                android:gravity="top">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💡"
+                    android:textSize="18sp"
+                    android:layout_marginEnd="12dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Os lembretes repetem todo dia no horário configurado. Toque no horário rosa para personalizar."
+                    android:textColor="#888888"
+                    android:textSize="14sp"
+                    android:lineSpacingMultiplier="1.5"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- ══ BOTTOM NAV ════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="5"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:elevation="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/navHome" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_home" android:background="@android:color/transparent"
+                android:contentDescription="Início" android:padding="0dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Início" android:textSize="9sp" android:textColor="#555555"
+                android:layout_marginTop="3dp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/navStats" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_stats" android:background="@android:color/transparent"
+                android:contentDescription="Stats" android:padding="0dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Stats" android:textSize="9sp" android:textColor="#555555"
+                android:layout_marginTop="3dp"/>
+        </LinearLayout>
+
+        <Space android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/navGoals" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_goals" android:background="@android:color/transparent"
+                android:contentDescription="Metas" android:padding="0dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Metas" android:textSize="9sp" android:textColor="#555555"
+                android:layout_marginTop="3dp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/navProfile" android:layout_width="30dp" android:layout_height="30dp"
+                android:src="@drawable/ic_nav_profile" android:background="@android:color/transparent"
+                android:contentDescription="Perfil" android:padding="0dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Perfil" android:textSize="9sp" android:textColor="#FFFFFF"
+                android:layout_marginTop="3dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ══ FAB CENTRAL ═════════════════════════════════════════════ -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnAdd"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:background="@drawable/circle_gradient_bg"
+        android:src="@android:drawable/ic_input_add"
+        android:padding="16dp"
+        android:contentDescription="Adicionar tarefa"
+        app:tint="#FFFFFF"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:translationY="31dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
