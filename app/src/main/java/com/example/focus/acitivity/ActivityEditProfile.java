@@ -1,10 +1,16 @@
 package com.example.focus.acitivity;
 
-import android.content.Intent;
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +20,8 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.focus.R;
@@ -21,32 +29,31 @@ import com.example.focus.network.ApiService;
 import com.example.focus.network.RetrofitClient;
 import com.example.focus.responses.UpdateProfileResponse;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ActivityEditProfile extends AppCompatActivity {
 
+    private static final String TAG = "EDIT_PROFILE";
+    private static final int PERMISSION_REQUEST_CODE = 100;
+
     private ImageView imgAvatar;
     private EditText etNome, etEmail, etSenha, etConfirmarSenha;
     private Button btnSalvar;
+    private SharedPreferences prefs;
 
-    private Uri fotoUri = null;         // URI local selecionada pelo user
-    private String fotoAtualUrl = null; // URL da foto atual (do SharedPreferences)
+    private Uri fotoUri = null;
 
-    // Launcher para galeria
     private final ActivityResultLauncher<String> galeriaLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) {
                     fotoUri = uri;
-                    // Mostra preview da foto selecionada
+                    Log.d(TAG, "Foto selecionada: " + uri.toString());
+                    imgAvatar.setPadding(0, 0, 0, 0);
                     Glide.with(this).load(uri).circleCrop().into(imgAvatar);
                 }
             });
@@ -63,50 +70,98 @@ public class ActivityEditProfile extends AppCompatActivity {
         etConfirmarSenha = findViewById(R.id.etEditConfirmarSenha);
         btnSalvar        = findViewById(R.id.btnSalvarPerfil);
 
+        prefs = getSharedPreferences("user", MODE_PRIVATE);
+
         carregarDadosAtuais();
 
-        // Clique na foto abre galeria
-        imgAvatar.setOnClickListener(v -> galeriaLauncher.launch("image/*"));
-
+        imgAvatar.setOnClickListener(v -> abrirGaleria());
         btnSalvar.setOnClickListener(v -> validarESalvar());
 
-        // Botão voltar
         View btnVoltar = findViewById(R.id.btnVoltarEdit);
-        if (btnVoltar != null) btnVoltar.setOnClickListener(v -> {
-            finish();
-            overridePendingTransition(0, 0);
-        });
+        if (btnVoltar != null) {
+            btnVoltar.setOnClickListener(v -> {
+                finish();
+                overridePendingTransition(0, 0);
+            });
+        }
     }
 
-    // ── Preenche campos com dados atuais ──────────────────────────────────────
-    private void carregarDadosAtuais() {
-        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+    // ── Galeria ───────────────────────────────────────────────────────────────
+    private void abrirGaleria() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                    == PackageManager.PERMISSION_GRANTED) {
+                galeriaLauncher.launch("image/*");
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                        PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                galeriaLauncher.launch("image/*");
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_CODE);
+            }
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                galeriaLauncher.launch("image/*");
+            } else {
+                Toast.makeText(this, "Permissão negada para acessar a galeria", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    // ── Carrega dados atuais ──────────────────────────────────────────────────
+    private void carregarDadosAtuais() {
         etNome.setText(prefs.getString("nome", ""));
         etEmail.setText(prefs.getString("email", ""));
-        fotoAtualUrl = prefs.getString("foto_url", null);
-
-        // Carrega foto atual ou default
-        carregarFotoAvatar(fotoAtualUrl);
+        String foto = prefs.getString("foto_url", null);
+        carregarFotoAvatar(foto);
     }
 
-    private void carregarFotoAvatar(String url) {
-        if (url != null && !url.isEmpty()) {
-            String urlCompleta = RetrofitClient.BASE_URL + url;
+    private void carregarFotoAvatar(String foto) {
+        if (foto == null || foto.isEmpty()) {
+            int pad = (int) (20 * getResources().getDisplayMetrics().density);
+            imgAvatar.setPadding(pad, pad, pad, pad);
+            imgAvatar.setImageResource(R.drawable.ic_nav_profile);
+            return;
+        }
+
+        imgAvatar.setPadding(0, 0, 0, 0);
+
+        // Se for Base64, decodifica direto
+        if (!foto.startsWith("http") && !foto.startsWith("uploads/")) {
+            try {
+                byte[] decoded = Base64.decode(foto, Base64.NO_WRAP);
+                Bitmap bmp = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                Glide.with(this).load(bmp).circleCrop().into(imgAvatar);
+            } catch (Exception e) {
+                Log.e(TAG, "Erro ao decodificar Base64", e);
+                imgAvatar.setImageResource(R.drawable.ic_nav_profile);
+            }
+        } else {
+            // URL normal
             Glide.with(this)
-                    .load(urlCompleta)
+                    .load(RetrofitClient.BASE_URL + foto)
                     .circleCrop()
                     .placeholder(R.drawable.ic_nav_profile)
                     .error(R.drawable.ic_nav_profile)
                     .into(imgAvatar);
-        } else {
-            imgAvatar.setImageResource(R.drawable.ic_nav_profile);
         }
     }
 
     // ── Valida e salva ────────────────────────────────────────────────────────
     private void validarESalvar() {
-
         String nome  = etNome.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String senha = etSenha.getText().toString().trim();
@@ -125,101 +180,120 @@ public class ActivityEditProfile extends AppCompatActivity {
         btnSalvar.setEnabled(false);
         btnSalvar.setText("Salvando...");
 
-        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
         int userId    = prefs.getInt("user_id", 0);
         int profileId = prefs.getInt("profile_id", 0);
 
-        // Monta os campos de texto como RequestBody
-        RequestBody rbUserId    = toBody(String.valueOf(userId));
-        RequestBody rbProfileId = toBody(String.valueOf(profileId));
-        RequestBody rbNome      = toBody(nome);
-        RequestBody rbEmail     = toBody(email);
-        RequestBody rbSenha     = toBody(senha); // vazio = não altera
+        Log.d(TAG, "Salvando — user_id=" + userId + " profile_id=" + profileId);
 
-        // Monta a parte da foto (nullable)
-        MultipartBody.Part fotoPart = null;
+        // Converte foto para Base64 (null se não selecionou)
+        String fotoBase64 = null;
         if (fotoUri != null) {
-            File fotoFile = uriParaFile(fotoUri);
-            if (fotoFile != null) {
-                RequestBody rbFoto = RequestBody.create(
-                        MediaType.parse("image/*"), fotoFile);
-                fotoPart = MultipartBody.Part.createFormData("foto", fotoFile.getName(), rbFoto);
+            Log.d(TAG, "Convertendo foto para Base64...");
+            fotoBase64 = uriParaBase64(fotoUri);
+            if (fotoBase64 == null) {
+                Toast.makeText(this, "Não foi possível carregar a imagem", Toast.LENGTH_SHORT).show();
+                btnSalvar.setEnabled(true);
+                btnSalvar.setText("Salvar alterações");
+                return;
             }
+            Log.d(TAG, "Base64 gerado, tamanho: " + fotoBase64.length() + " chars");
         }
 
         ApiService api = RetrofitClient.getClient().create(ApiService.class);
 
-        api.updateProfile(rbUserId, rbProfileId, rbNome, rbEmail, rbSenha, fotoPart)
-                .enqueue(new Callback<UpdateProfileResponse>() {
+        api.updateProfile(
+                String.valueOf(userId),
+                String.valueOf(profileId),
+                nome,
+                email,
+                senha,
+                fotoBase64
+        ).enqueue(new Callback<UpdateProfileResponse>() {
 
-                    @Override
-                    public void onResponse(Call<UpdateProfileResponse> call,
-                                           Response<UpdateProfileResponse> response) {
+            @Override
+            public void onResponse(Call<UpdateProfileResponse> call,
+                                   Response<UpdateProfileResponse> response) {
 
-                        btnSalvar.setEnabled(true);
-                        btnSalvar.setText("Salvar");
+                Log.d(TAG, "HTTP: " + response.code());
+                Log.d(TAG, "body null? " + (response.body() == null));
+                if (response.body() != null) {
+                    Log.d(TAG, "status: "   + response.body().status);
+                    Log.d(TAG, "msg: "      + response.body().msg);
+                    Log.d(TAG, "foto_url tamanho: " + (response.body().fotoUrl != null ? response.body().fotoUrl.length() : "null"));
+                }
 
-                        if (!response.isSuccessful()
-                                || response.body() == null
-                                || !"ok".equals(response.body().status)) {
+                btnSalvar.setEnabled(true);
+                btnSalvar.setText("Salvar alterações");
 
-                            String msg = "Erro ao salvar";
-                            if (response.body() != null
-                                    && "email_em_uso".equals(response.body().status)) {
-                                msg = "Este email já está em uso";
-                            }
-                            Toast.makeText(ActivityEditProfile.this, msg, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                if (response.body() == null) {
+                    Toast.makeText(ActivityEditProfile.this,
+                            "Erro ao salvar. Tente novamente.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                        // Atualiza SharedPreferences com novos dados
-                        SharedPreferences.Editor editor = prefs.edit()
-                                .putString("nome", nome)
-                                .putString("email", email);
+                String status = response.body().status;
 
-                        String novaFoto = response.body().fotoUrl;
-                        if (novaFoto != null) {
-                            editor.putString("foto_url", novaFoto);
-                        }
-                        editor.apply();
+                if ("email_em_uso".equals(status)) {
+                    Toast.makeText(ActivityEditProfile.this,
+                            "Este email já está em uso", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                        Toast.makeText(ActivityEditProfile.this,
-                                "Perfil atualizado!", Toast.LENGTH_SHORT).show();
+                if (!"ok".equals(status)) {
+                    Toast.makeText(ActivityEditProfile.this,
+                            "Erro: " + response.body().msg, Toast.LENGTH_LONG).show();
+                    return;
+                }
 
-                        // Volta para o perfil
-                        setResult(RESULT_OK);
-                        finish();
-                        overridePendingTransition(0, 0);
-                    }
+                // Atualiza SharedPreferences
+                SharedPreferences.Editor editor = prefs.edit()
+                        .putString("nome", nome)
+                        .putString("email", email);
 
-                    @Override
-                    public void onFailure(Call<UpdateProfileResponse> call, Throwable t) {
-                        btnSalvar.setEnabled(true);
-                        btnSalvar.setText("Salvar");
-                        Toast.makeText(ActivityEditProfile.this,
-                                "Erro de conexão", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                String novaFoto = response.body().fotoUrl;
+                if (novaFoto != null && !novaFoto.isEmpty()) {
+                    editor.putString("foto_url", novaFoto);
+                }
+                editor.apply();
+
+                Log.d(TAG, "Perfil salvo com sucesso!");
+                Toast.makeText(ActivityEditProfile.this,
+                        "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                setResult(RESULT_OK);
+                finish();
+                overridePendingTransition(0, 0);
+            }
+
+            @Override
+            public void onFailure(Call<UpdateProfileResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage(), t);
+                btnSalvar.setEnabled(true);
+                btnSalvar.setText("Salvar alterações");
+                Toast.makeText(ActivityEditProfile.this,
+                        "Erro de conexão.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-    private RequestBody toBody(String value) {
-        return RequestBody.create(MediaType.parse("text/plain"), value);
-    }
-
-    // Copia URI para um File temporário (necessário para Retrofit)
-    private File uriParaFile(Uri uri) {
+    // ── Converte URI para Base64 ──────────────────────────────────────────────
+    private String uriParaBase64(Uri uri) {
         try {
-            InputStream is  = getContentResolver().openInputStream(uri);
-            File tmpFile    = File.createTempFile("foto_", ".jpg", getCacheDir());
-            FileOutputStream fos = new FileOutputStream(tmpFile);
-            byte[] buf = new byte[4096];
+            InputStream is = getContentResolver().openInputStream(uri);
+            if (is == null) return null;
+
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] chunk = new byte[4096];
             int len;
-            while ((len = is.read(buf)) != -1) fos.write(buf, 0, len);
-            fos.close();
+            while ((len = is.read(chunk)) != -1) {
+                buffer.write(chunk, 0, len);
+            }
             is.close();
-            return tmpFile;
+
+            return Base64.encodeToString(buffer.toByteArray(), Base64.NO_WRAP);
+
         } catch (Exception e) {
+            Log.e(TAG, "Erro em uriParaBase64", e);
             return null;
         }
     }

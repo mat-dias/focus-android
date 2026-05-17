@@ -3,7 +3,10 @@ package com.example.focus.acitivity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -69,18 +72,40 @@ public class ActivityProfile extends AppCompatActivity {
         txtXP.setText(prefs.getInt("xp", 0) + " XP");
         txtStreak.setText(String.valueOf(prefs.getInt("streak", 0)));
 
-        String fotoUrl = prefs.getString("foto_url", null);
-        if (imgAvatar != null) {
-            if (fotoUrl != null && !fotoUrl.isEmpty()) {
+        String foto = prefs.getString("foto_url", null);
+        carregarFotoAvatar(foto);
+    }
+
+    private void carregarFotoAvatar(String foto) {
+        if (imgAvatar == null) return;
+
+        if (foto == null || foto.isEmpty()) {
+            imgAvatar.setImageResource(R.drawable.ic_nav_profile);
+            return;
+        }
+
+        // Base64
+        if (!foto.startsWith("http") && !foto.startsWith("uploads/")) {
+            try {
+                byte[] decoded = Base64.decode(foto, Base64.NO_WRAP);
+                Bitmap bmp = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
                 Glide.with(this)
-                        .load(RetrofitClient.BASE_URL + fotoUrl)
+                        .load(bmp)
                         .circleCrop()
                         .placeholder(R.drawable.ic_nav_profile)
                         .error(R.drawable.ic_nav_profile)
                         .into(imgAvatar);
-            } else {
+            } catch (Exception e) {
                 imgAvatar.setImageResource(R.drawable.ic_nav_profile);
             }
+        } else {
+            // URL normal (compatibilidade com fotos antigas)
+            Glide.with(this)
+                    .load(RetrofitClient.BASE_URL + foto)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_nav_profile)
+                    .error(R.drawable.ic_nav_profile)
+                    .into(imgAvatar);
         }
     }
 
@@ -89,7 +114,6 @@ public class ActivityProfile extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(this, ActivityEditProfile.class);
             editLauncher.launch(intent);
-            // Remove animação de transição
             overridePendingTransition(0, 0);
         });
 
@@ -101,7 +125,7 @@ public class ActivityProfile extends AppCompatActivity {
         btnAbout.setOnClickListener(v ->
                 new AlertDialog.Builder(this)
                         .setTitle("Focus App")
-                        .setMessage("Versão 1.0\n\nGerencie suas tarefas, acompanhe seu progresso e mantenha seu streak em dia! 🚀")
+                        .setMessage("Versão 1.0\n\nGerencie suas tarefas, acompanhe seu progresso e mantenha seu streak em dia!")
                         .setPositiveButton("Fechar", null)
                         .show()
         );

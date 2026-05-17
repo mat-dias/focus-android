@@ -6,14 +6,10 @@ import com.example.focus.responses.StatsResponse;
 import com.example.focus.responses.TaskResponse;
 import com.example.focus.responses.UpdateProfileResponse;
 
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 
 public interface ApiService {
 
@@ -41,6 +37,14 @@ public interface ApiService {
     @FormUrlEncoded @POST("get_stats.php")
     Call<StatsResponse> getStats(@Field("profile_id") int profileId, @Field("periodo") String periodo);
 
-    @Multipart @POST("update_profile.php")
-    Call<UpdateProfileResponse> updateProfile(@Part("user_id") RequestBody userId, @Part("profile_id") RequestBody profileId, @Part("nome") RequestBody nome, @Part("email") RequestBody email, @Part("senha") RequestBody senha, @Part MultipartBody.Part foto);
+    // ← Atualizado: Base64 em vez de Multipart
+    @FormUrlEncoded @POST("update_profile.php")
+    Call<UpdateProfileResponse> updateProfile(
+            @Field("user_id")      String userId,
+            @Field("profile_id")  String profileId,
+            @Field("nome")        String nome,
+            @Field("email")       String email,
+            @Field("senha")       String senha,
+            @Field("foto_base64") String fotoBase64
+    );
 }
