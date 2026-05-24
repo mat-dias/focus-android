@@ -21,8 +21,11 @@ import com.example.focus.network.RetrofitClient;
 import com.example.focus.responses.StatsResponse;
 import com.example.focus.views.PieChartView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,7 +33,7 @@ import retrofit2.Response;
 
 public class ActivityStats extends AppCompatActivity {
 
-    // Views
+    // ── Views ─────────────────────────────────────────────────────────────────
     private TextView txtStatsStreak, txtStatsXP, txtNivel, txtXpProgresso;
     private TextView txtTodayTasks, txtTodayCompleted, txtTodayXP, txtTaxaHoje;
     private TextView txtMelhorStreak, txtDiasAtivos, txtDiasSemana;
@@ -43,14 +46,16 @@ public class ActivityStats extends AppCompatActivity {
     private LinearLayout btnPeriodoSemana, btnPeriodoMes, btnPeriodoTotal;
 
     private int profileId;
-    private String periodoAtual = "semana";
 
     private final int[] CORES = {
-            Color.parseColor("#4ADE80"), Color.parseColor("#EC4899"),
-            Color.parseColor("#FFAA44"), Color.parseColor("#06B6D4"),
+            Color.parseColor("#4ADE80"),
+            Color.parseColor("#EC4899"),
+            Color.parseColor("#FFAA44"),
+            Color.parseColor("#06B6D4"),
             Color.parseColor("#A78BFA")
     };
 
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,39 +70,38 @@ public class ActivityStats extends AppCompatActivity {
         profileId = prefs.getInt("profile_id", 0);
 
         setupFiltroPeriodo();
-        carregarStats("semana");
     }
 
     // ── Bind ──────────────────────────────────────────────────────────────────
     private void bindViews() {
-        txtStatsStreak       = findViewById(R.id.txtStatsStreak);
-        txtStatsXP           = findViewById(R.id.txtStatsXP);
-        txtNivel             = findViewById(R.id.txtNivel);
-        txtXpProgresso       = findViewById(R.id.txtXpProgresso);
-        barXpFill            = findViewById(R.id.barXpFill);
-        txtTodayTasks        = findViewById(R.id.txtTodayTasks);
-        txtTodayCompleted    = findViewById(R.id.txtTodayCompleted);
-        txtTodayXP           = findViewById(R.id.txtTodayXP);
-        txtTaxaHoje          = findViewById(R.id.txtTaxaHoje);
-        barTaxaHojeFill      = findViewById(R.id.barTaxaHojeFill);
-        txtMelhorStreak      = findViewById(R.id.txtMelhorStreak);
-        txtDiasAtivos        = findViewById(R.id.txtDiasAtivos);
-        txtDiasSemana        = findViewById(R.id.txtDiasSemana);
-        txtTaxaConclusao     = findViewById(R.id.txtTaxaConclusao);
-        txtConcluidasPeriodo = findViewById(R.id.txtConcluidasPeriodo);
-        barTaxaFill          = findViewById(R.id.barTaxaFill);
-        txtPrioHigh          = findViewById(R.id.txtPrioHigh);
-        txtPrioMedium        = findViewById(R.id.txtPrioMedium);
-        txtPrioLow           = findViewById(R.id.txtPrioLow);
-        barHighFill          = findViewById(R.id.barHighFill);
-        barMediumFill        = findViewById(R.id.barMediumFill);
-        barLowFill           = findViewById(R.id.barLowFill);
-        chartWeeklyBars      = findViewById(R.id.chartWeeklyBars);
+        txtStatsStreak        = findViewById(R.id.txtStatsStreak);
+        txtStatsXP            = findViewById(R.id.txtStatsXP);
+        txtNivel              = findViewById(R.id.txtNivel);
+        txtXpProgresso        = findViewById(R.id.txtXpProgresso);
+        barXpFill             = findViewById(R.id.barXpFill);
+        txtTodayTasks         = findViewById(R.id.txtTodayTasks);
+        txtTodayCompleted     = findViewById(R.id.txtTodayCompleted);
+        txtTodayXP            = findViewById(R.id.txtTodayXP);
+        txtTaxaHoje           = findViewById(R.id.txtTaxaHoje);
+        barTaxaHojeFill       = findViewById(R.id.barTaxaHojeFill);
+        txtMelhorStreak       = findViewById(R.id.txtMelhorStreak);
+        txtDiasAtivos         = findViewById(R.id.txtDiasAtivos);
+        txtDiasSemana         = findViewById(R.id.txtDiasSemana);
+        txtTaxaConclusao      = findViewById(R.id.txtTaxaConclusao);
+        txtConcluidasPeriodo  = findViewById(R.id.txtConcluidasPeriodo);
+        barTaxaFill           = findViewById(R.id.barTaxaFill);
+        txtPrioHigh           = findViewById(R.id.txtPrioHigh);
+        txtPrioMedium         = findViewById(R.id.txtPrioMedium);
+        txtPrioLow            = findViewById(R.id.txtPrioLow);
+        barHighFill           = findViewById(R.id.barHighFill);
+        barMediumFill         = findViewById(R.id.barMediumFill);
+        barLowFill            = findViewById(R.id.barLowFill);
+        chartWeeklyBars       = findViewById(R.id.chartWeeklyBars);
         chartMonthlyContainer = findViewById(R.id.chartMonthlyContainer);
-        pieChart             = findViewById(R.id.pieChart);
-        btnPeriodoSemana     = findViewById(R.id.btnPeriodoSemana);
-        btnPeriodoMes        = findViewById(R.id.btnPeriodoMes);
-        btnPeriodoTotal      = findViewById(R.id.btnPeriodoTotal);
+        pieChart              = findViewById(R.id.pieChart);
+        btnPeriodoSemana      = findViewById(R.id.btnPeriodoSemana);
+        btnPeriodoMes         = findViewById(R.id.btnPeriodoMes);
+        btnPeriodoTotal       = findViewById(R.id.btnPeriodoTotal);
     }
 
     // ── Filtro de período ─────────────────────────────────────────────────────
@@ -109,57 +113,61 @@ public class ActivityStats extends AppCompatActivity {
     }
 
     private void selecionarPeriodo(String periodo) {
-        periodoAtual = periodo;
-        int ativo   = Color.parseColor("#06B6D4");
-        int inativo = Color.parseColor("#1E1E1E");
+        int corAtivo   = Color.parseColor("#06B6D4");
+        int corInativo = Color.parseColor("#1E1E1E");
         int txtAtivo   = Color.WHITE;
         int txtInativo = Color.parseColor("#888888");
 
-        resetarPillFiltro(btnPeriodoSemana, inativo, txtInativo);
-        resetarPillFiltro(btnPeriodoMes,    inativo, txtInativo);
-        resetarPillFiltro(btnPeriodoTotal,  inativo, txtInativo);
+        resetarPill(btnPeriodoSemana, corInativo, txtInativo);
+        resetarPill(btnPeriodoMes,    corInativo, txtInativo);
+        resetarPill(btnPeriodoTotal,  corInativo, txtInativo);
 
-        LinearLayout selecionado = periodo.equals("semana") ? btnPeriodoSemana
-                : periodo.equals("mes") ? btnPeriodoMes : btnPeriodoTotal;
-        resetarPillFiltro(selecionado, ativo, txtAtivo);
+        LinearLayout ativo = periodo.equals("semana") ? btnPeriodoSemana
+                : periodo.equals("mes")    ? btnPeriodoMes
+                : btnPeriodoTotal;
+        resetarPill(ativo, corAtivo, txtAtivo);
 
         carregarStats(periodo);
     }
 
-    private void resetarPillFiltro(LinearLayout pill, int bgColor, int txtColor) {
+    private void resetarPill(LinearLayout pill, int bgColor, int txtColor) {
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(bgColor);
         bg.setCornerRadius(20 * getResources().getDisplayMetrics().density);
         pill.setBackground(bg);
         for (int i = 0; i < pill.getChildCount(); i++) {
-            if (pill.getChildAt(i) instanceof TextView)
-                ((TextView) pill.getChildAt(i)).setTextColor(txtColor);
+            View v = pill.getChildAt(i);
+            if (v instanceof TextView) ((TextView) v).setTextColor(txtColor);
         }
     }
 
-    // ── Carrega ───────────────────────────────────────────────────────────────
+    // ── Carregar ──────────────────────────────────────────────────────────────
     private void carregarStats(String periodo) {
         if (profileId == 0) return;
         ApiService api = RetrofitClient.getClient().create(ApiService.class);
         api.getStats(profileId, periodo).enqueue(new Callback<StatsResponse>() {
             @Override
             public void onResponse(Call<StatsResponse> call, Response<StatsResponse> response) {
-                if (!response.isSuccessful() || response.body() == null || !"ok".equals(response.body().status)) {
-                    Toast.makeText(ActivityStats.this, "Erro ao carregar", Toast.LENGTH_SHORT).show();
+                if (!response.isSuccessful()
+                        || response.body() == null
+                        || !"ok".equals(response.body().status)) {
+                    Toast.makeText(ActivityStats.this,
+                            "Erro ao carregar estatísticas", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 renderizar(response.body());
             }
+
             @Override
             public void onFailure(Call<StatsResponse> call, Throwable t) {
-                Toast.makeText(ActivityStats.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityStats.this,
+                        "Erro de conexão", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    // ── Renderiza ─────────────────────────────────────────────────────────────
+    // ── Renderizar ────────────────────────────────────────────────────────────
     private void renderizar(StatsResponse s) {
-        int dp = (int) getResources().getDisplayMetrics().density;
 
         // Cards topo
         txtStatsStreak.setText(String.valueOf(s.streak));
@@ -185,34 +193,36 @@ public class ActivityStats extends AppCompatActivity {
         txtConcluidasPeriodo.setText(s.concluidasPeriodo + " de " + s.agendadasPeriodo);
         animarBarra(barTaxaFill, s.taxaConclusao);
 
-        // Prioridades
-        int totalPrio = (s.prioridades != null)
-                ? (s.prioridades.getOrDefault("high", 0)
-                + s.prioridades.getOrDefault("medium", 0)
-                + s.prioridades.getOrDefault("low", 0))
-                : 0;
-        int high   = s.prioridades != null ? s.prioridades.getOrDefault("high", 0)   : 0;
-        int medium = s.prioridades != null ? s.prioridades.getOrDefault("medium", 0) : 0;
-        int low    = s.prioridades != null ? s.prioridades.getOrDefault("low", 0)    : 0;
-        txtPrioHigh.setText(high + " Alta");
+        // Prioridades — compatível com API < 24
+        int high = 0, medium = 0, low = 0;
+        if (s.prioridades != null) {
+            Integer h = s.prioridades.get("high");
+            Integer m = s.prioridades.get("medium");
+            Integer l = s.prioridades.get("low");
+            high   = h != null ? h : 0;
+            medium = m != null ? m : 0;
+            low    = l != null ? l : 0;
+        }
+        int totalPrio = high + medium + low;
+        txtPrioHigh.setText(high   + " Alta");
         txtPrioMedium.setText(medium + " Média");
-        txtPrioLow.setText(low + " Baixa");
+        txtPrioLow.setText(low     + " Baixa");
         animarBarra(barHighFill,   totalPrio > 0 ? (high   * 100 / totalPrio) : 0);
         animarBarra(barMediumFill, totalPrio > 0 ? (medium * 100 / totalPrio) : 0);
         animarBarra(barLowFill,    totalPrio > 0 ? (low    * 100 / totalPrio) : 0);
 
-        // Gráfico barras
+        // Gráfico e pizza
         renderizarBarras(s.barras);
-
-        // Pizza
         renderizarPizza(s.tags);
     }
 
+    // ── Barra de progresso ────────────────────────────────────────────────────
     private void animarBarra(View barra, int percent) {
         if (barra == null) return;
         barra.post(() -> {
             View parent = (View) barra.getParent();
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barra.getLayoutParams();
+            LinearLayout.LayoutParams lp =
+                    (LinearLayout.LayoutParams) barra.getLayoutParams();
             lp.width = (int) (parent.getWidth() * (percent / 100f));
             barra.setLayoutParams(lp);
         });
@@ -228,24 +238,27 @@ public class ActivityStats extends AppCompatActivity {
         for (StatsResponse.BarraItem b : barras) if (b.qtd > max) max = b.qtd;
         int maxH = 110 * dp;
 
-        String[] diasPt = {"Dom","Seg","Ter","Qua","Qui","Sex","Sáb"};
+        String[] diasPt = {"Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"};
 
         for (StatsResponse.BarraItem b : barras) {
-            // Converte label inglês para PT
+
+            // Converte data para dia da semana em PT
             String labelPt = b.label;
             try {
-                java.util.Calendar cal = java.util.Calendar.getInstance();
-                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                Calendar cal = Calendar.getInstance();
                 cal.setTime(sdf.parse(b.data));
-                labelPt = diasPt[cal.get(java.util.Calendar.DAY_OF_WEEK) - 1];
+                labelPt = diasPt[cal.get(Calendar.DAY_OF_WEEK) - 1];
             } catch (Exception ignored) {}
 
+            // Coluna
             LinearLayout coluna = new LinearLayout(this);
             coluna.setOrientation(LinearLayout.VERTICAL);
             coluna.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-            coluna.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+            coluna.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
 
-            // Número
+            // Número acima da barra
             TextView tvNum = new TextView(this);
             tvNum.setText(b.qtd > 0 ? String.valueOf(b.qtd) : "");
             tvNum.setTextColor(Color.parseColor("#888888"));
@@ -260,8 +273,11 @@ public class ActivityStats extends AppCompatActivity {
             bp.setMargins(3 * dp, 4 * dp, 3 * dp, 0);
             bar.setLayoutParams(bp);
             GradientDrawable shape = new GradientDrawable();
-            shape.setColor(b.qtd > 0 ? Color.parseColor("#06B6D4") : Color.parseColor("#2A2A2A"));
-            shape.setCornerRadii(new float[]{6*dp,6*dp,6*dp,6*dp,0,0,0,0});
+            shape.setColor(b.qtd > 0
+                    ? Color.parseColor("#06B6D4")
+                    : Color.parseColor("#2A2A2A"));
+            shape.setCornerRadii(new float[]{
+                    6*dp, 6*dp, 6*dp, 6*dp, 0, 0, 0, 0});
             bar.setBackground(shape);
             coluna.addView(bar);
 
@@ -272,8 +288,9 @@ public class ActivityStats extends AppCompatActivity {
             tvLabel.setTextSize(9);
             tvLabel.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, 4*dp, 0, 0);
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 4 * dp, 0, 0);
             tvLabel.setLayoutParams(lp);
             coluna.addView(tvLabel);
 
@@ -283,6 +300,7 @@ public class ActivityStats extends AppCompatActivity {
 
     // ── Pizza ─────────────────────────────────────────────────────────────────
     private void renderizarPizza(List<StatsResponse.TagItem> tags) {
+        // Remove legenda antiga mantendo título e pizza
         while (chartMonthlyContainer.getChildCount() > 2)
             chartMonthlyContainer.removeViewAt(2);
 
@@ -299,11 +317,18 @@ public class ActivityStats extends AppCompatActivity {
         }
 
         pieChart.setVisibility(View.VISIBLE);
+
+        // Fatias
         List<PieChartView.Fatia> fatias = new ArrayList<>();
-        for (int i = 0; i < tags.size(); i++)
-            fatias.add(new PieChartView.Fatia(tags.get(i).qtd, CORES[i % CORES.length], tags.get(i).tag));
+        for (int i = 0; i < tags.size(); i++) {
+            fatias.add(new PieChartView.Fatia(
+                    tags.get(i).qtd,
+                    CORES[i % CORES.length],
+                    tags.get(i).tag));
+        }
         pieChart.setFatias(fatias);
 
+        // Legenda
         for (int i = 0; i < tags.size(); i++) {
             StatsResponse.TagItem item = tags.get(i);
             int cor = CORES[i % CORES.length];
@@ -312,25 +337,29 @@ public class ActivityStats extends AppCompatActivity {
             row.setOrientation(LinearLayout.HORIZONTAL);
             row.setGravity(Gravity.CENTER_VERTICAL);
             LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            rp.setMargins(0, 0, 0, 10*dp);
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            rp.setMargins(0, 0, 0, 10 * dp);
             row.setLayoutParams(rp);
 
+            // Ponto de cor
             View dot = new View(this);
-            LinearLayout.LayoutParams dp2 = new LinearLayout.LayoutParams(12*dp, 12*dp);
-            dot.setLayoutParams(dp2);
+            dot.setLayoutParams(new LinearLayout.LayoutParams(12 * dp, 12 * dp));
             dot.setBackgroundColor(cor);
             row.addView(dot);
 
+            // Nome da tag
             TextView tvTag = new TextView(this);
-            LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-            tp.setMargins(12*dp, 0, 0, 0);
+            LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tp.setMargins(12 * dp, 0, 0, 0);
             tvTag.setLayoutParams(tp);
             tvTag.setText("#" + item.tag);
             tvTag.setTextColor(Color.WHITE);
             tvTag.setTextSize(13);
             row.addView(tvTag);
 
+            // Percentual
             TextView tvPct = new TextView(this);
             tvPct.setText(item.percent + "%");
             tvPct.setTextColor(cor);
