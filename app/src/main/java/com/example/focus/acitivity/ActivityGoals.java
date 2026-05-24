@@ -39,6 +39,7 @@ public class ActivityGoals extends AppCompatActivity {
     private LinearLayout completedSection;
     private int profileId;
 
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +81,8 @@ public class ActivityGoals extends AppCompatActivity {
                 if (!response.isSuccessful()
                         || response.body() == null
                         || !"ok".equals(response.body().status)) {
-                    Toast.makeText(ActivityGoals.this, "Erro ao carregar tarefas", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityGoals.this,
+                            "Erro ao carregar tarefas", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 TaskResponse res = response.body();
@@ -89,7 +91,8 @@ public class ActivityGoals extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TaskResponse> call, Throwable t) {
-                Toast.makeText(ActivityGoals.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityGoals.this,
+                        "Erro de conexão", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -110,8 +113,9 @@ public class ActivityGoals extends AppCompatActivity {
             progressBarFill.setLayoutParams(lp);
         });
 
+        // Limpa seções mantendo o título (índice 0)
         while (inProgressSection.getChildCount() > 1) inProgressSection.removeViewAt(1);
-        while (completedSection.getChildCount() > 1)  completedSection.removeViewAt(1);
+        while (completedSection.getChildCount()  > 1) completedSection.removeViewAt(1);
 
         for (TaskResponse.TaskItem task : tasks) {
             if (task.done) completedSection.addView(criarCard(task));
@@ -160,25 +164,44 @@ public class ActivityGoals extends AppCompatActivity {
 
             ApiService api = RetrofitClient.getClient().create(ApiService.class);
             api.updateTaskDone(
-                    task.taskId, profileId, novoDone ? 1 : 0,
+                    task.taskId,
+                    profileId,
+                    novoDone ? 1 : 0,
                     task.schedulingId != null ? task.schedulingId : 0,
                     task.scheduleId   != null ? task.scheduleId   : 0
             ).enqueue(new Callback<BasicResponse>() {
                 @Override
                 public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
                     if (response.body() != null && "ok".equals(response.body().status)) {
+                        BasicResponse res = response.body();
+
+                        // Atualiza IDs retornados pelo PHP para próximas chamadas
+                        if (res.schedulingId != null) task.schedulingId = res.schedulingId;
+                        if (res.scheduleId   != null) task.scheduleId   = res.scheduleId;
+
+                        // Feedback de XP e streak
+                        if (novoDone && res.xpGanho > 0) {
+                            Toast.makeText(ActivityGoals.this,
+                                    "+" + res.xpGanho + " XP  🔥 Streak: " + res.streak,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
                         carregarTasks();
                     } else {
+                        // Reverte estado visual em caso de erro
                         task.done = !novoDone;
                         atualizarBotaoCheck(btnCheck, task.done);
-                        Toast.makeText(ActivityGoals.this, "Erro ao atualizar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityGoals.this,
+                                "Erro ao atualizar", Toast.LENGTH_SHORT).show();
                     }
                 }
+
                 @Override
                 public void onFailure(Call<BasicResponse> call, Throwable t) {
                     task.done = !novoDone;
                     atualizarBotaoCheck(btnCheck, task.done);
-                    Toast.makeText(ActivityGoals.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityGoals.this,
+                            "Erro de conexão", Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -195,6 +218,7 @@ public class ActivityGoals extends AppCompatActivity {
         rowTitulo.setOrientation(LinearLayout.HORIZONTAL);
         rowTitulo.setGravity(Gravity.CENTER_VERTICAL);
 
+        // Bolinha de prioridade
         View dot = new View(this);
         LinearLayout.LayoutParams dotParams = new LinearLayout.LayoutParams(8 * dp, 8 * dp);
         dotParams.setMarginEnd(8 * dp);
@@ -202,6 +226,7 @@ public class ActivityGoals extends AppCompatActivity {
         dot.setBackgroundColor(corDaPrioridade(task.priority));
         rowTitulo.addView(dot);
 
+        // Título
         TextView tvTitle = new TextView(this);
         tvTitle.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -212,6 +237,7 @@ public class ActivityGoals extends AppCompatActivity {
         rowTitulo.addView(tvTitle);
         colCenter.addView(rowTitulo);
 
+        // Tag
         if (task.tag != null && !task.tag.isEmpty()) {
             TextView tvTag = new TextView(this);
             LinearLayout.LayoutParams tagParams = new LinearLayout.LayoutParams(
@@ -293,15 +319,19 @@ public class ActivityGoals extends AppCompatActivity {
             @Override
             public void onResponse(Call<BasicResponse> call, Response<BasicResponse> response) {
                 if (response.body() != null && "ok".equals(response.body().status)) {
-                    Toast.makeText(ActivityGoals.this, "Tarefa deletada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityGoals.this,
+                            "Tarefa deletada", Toast.LENGTH_SHORT).show();
                     carregarTasks();
                 } else {
-                    Toast.makeText(ActivityGoals.this, "Erro ao deletar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityGoals.this,
+                            "Erro ao deletar", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<BasicResponse> call, Throwable t) {
-                Toast.makeText(ActivityGoals.this, "Erro de conexão", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityGoals.this,
+                        "Erro de conexão", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -321,6 +351,7 @@ public class ActivityGoals extends AppCompatActivity {
     }
 
     private int corDaPrioridade(String priority) {
+        if (priority == null) return Color.parseColor("#4ADE80");
         switch (priority) {
             case "high":   return Color.parseColor("#FF6B8A");
             case "medium": return Color.parseColor("#FFAA44");

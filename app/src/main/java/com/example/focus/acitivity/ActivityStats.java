@@ -176,10 +176,10 @@ public class ActivityStats extends AppCompatActivity {
         txtXpProgresso.setText(s.xpProgresso + "% para Nível " + (s.nivel + 1));
         animarBarra(barXpFill, s.xpProgresso);
 
-        // Hoje
+        // Hoje — XP real baseado em prioridade
         txtTodayTasks.setText(String.valueOf(s.hojeTotal));
         txtTodayCompleted.setText(String.valueOf(s.hojeConcluidas));
-        txtTodayXP.setText("+" + (s.hojeConcluidas * 67));
+        txtTodayXP.setText("+" + s.xpHoje);
         txtTaxaHoje.setText(s.taxaHoje + "%");
         animarBarra(barTaxaHojeFill, s.taxaHoje);
 
@@ -242,7 +242,6 @@ public class ActivityStats extends AppCompatActivity {
 
         for (StatsResponse.BarraItem b : barras) {
 
-            // Converte data para dia da semana em PT
             String labelPt = b.label;
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -251,14 +250,12 @@ public class ActivityStats extends AppCompatActivity {
                 labelPt = diasPt[cal.get(Calendar.DAY_OF_WEEK) - 1];
             } catch (Exception ignored) {}
 
-            // Coluna
             LinearLayout coluna = new LinearLayout(this);
             coluna.setOrientation(LinearLayout.VERTICAL);
             coluna.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
             coluna.setLayoutParams(new LinearLayout.LayoutParams(
                     0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
 
-            // Número acima da barra
             TextView tvNum = new TextView(this);
             tvNum.setText(b.qtd > 0 ? String.valueOf(b.qtd) : "");
             tvNum.setTextColor(Color.parseColor("#888888"));
@@ -266,7 +263,6 @@ public class ActivityStats extends AppCompatActivity {
             tvNum.setGravity(Gravity.CENTER);
             coluna.addView(tvNum);
 
-            // Barra
             View bar = new View(this);
             int altura = b.qtd == 0 ? 4 * dp : (int) ((b.qtd / (float) max) * maxH);
             LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(22 * dp, altura);
@@ -281,7 +277,6 @@ public class ActivityStats extends AppCompatActivity {
             bar.setBackground(shape);
             coluna.addView(bar);
 
-            // Label dia
             TextView tvLabel = new TextView(this);
             tvLabel.setText(labelPt);
             tvLabel.setTextColor(Color.parseColor("#888888"));
@@ -300,7 +295,6 @@ public class ActivityStats extends AppCompatActivity {
 
     // ── Pizza ─────────────────────────────────────────────────────────────────
     private void renderizarPizza(List<StatsResponse.TagItem> tags) {
-        // Remove legenda antiga mantendo título e pizza
         while (chartMonthlyContainer.getChildCount() > 2)
             chartMonthlyContainer.removeViewAt(2);
 
@@ -318,7 +312,6 @@ public class ActivityStats extends AppCompatActivity {
 
         pieChart.setVisibility(View.VISIBLE);
 
-        // Fatias
         List<PieChartView.Fatia> fatias = new ArrayList<>();
         for (int i = 0; i < tags.size(); i++) {
             fatias.add(new PieChartView.Fatia(
@@ -328,7 +321,6 @@ public class ActivityStats extends AppCompatActivity {
         }
         pieChart.setFatias(fatias);
 
-        // Legenda
         for (int i = 0; i < tags.size(); i++) {
             StatsResponse.TagItem item = tags.get(i);
             int cor = CORES[i % CORES.length];
@@ -342,13 +334,11 @@ public class ActivityStats extends AppCompatActivity {
             rp.setMargins(0, 0, 0, 10 * dp);
             row.setLayoutParams(rp);
 
-            // Ponto de cor
             View dot = new View(this);
             dot.setLayoutParams(new LinearLayout.LayoutParams(12 * dp, 12 * dp));
             dot.setBackgroundColor(cor);
             row.addView(dot);
 
-            // Nome da tag
             TextView tvTag = new TextView(this);
             LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(
                     0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
@@ -359,7 +349,6 @@ public class ActivityStats extends AppCompatActivity {
             tvTag.setTextSize(13);
             row.addView(tvTag);
 
-            // Percentual
             TextView tvPct = new TextView(this);
             tvPct.setText(item.percent + "%");
             tvPct.setTextColor(cor);
