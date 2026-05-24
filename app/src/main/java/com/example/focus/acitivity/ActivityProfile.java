@@ -129,7 +129,7 @@ public class ActivityProfile extends AppCompatActivity {
                     .setTitle("Entrar na pagina de suporte")
                     .setMessage("Tem certeza que deseja sair do app?")
                     .setPositiveButton("Sair", (dialog, which) -> {
-                        Uri url = Uri.parse("https://google.com");
+                        Uri url = Uri.parse("https://sitetcc.page.gd/Pages/contato.html");
                         Intent intent = new Intent(Intent.ACTION_VIEW, url);
                         startActivity(intent);
                     })

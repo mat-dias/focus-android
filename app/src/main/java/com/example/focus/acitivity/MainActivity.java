@@ -24,6 +24,7 @@ import com.example.focus.R;
 import com.example.focus.network.ApiService;
 import com.example.focus.network.RetrofitClient;
 import com.example.focus.notifications.FocusNotificationManager;
+import com.example.focus.responses.StatsResponse;
 import com.example.focus.responses.TaskResponse;
 
 import java.util.ArrayList;
@@ -42,9 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private PomodoroController pomodoro;
 
-    // Lista de avisos que vão rotacionar no card
     private final List<String[]> avisos = new ArrayList<>();
-    // cada item: [mensagem principal, sub-mensagem (pode ser "")]
     private int avisoIdx = 0;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -68,7 +67,10 @@ public class MainActivity extends AppCompatActivity {
         txtStatusSub      = findViewById(R.id.txtStatusSub);
         txtAvisoIndicador = findViewById(R.id.txtAvisoIndicador);
 
-        carregarDados();
+        // Mostra nome imediatamente do cache enquanto busca do banco
+        txtWelcome.setText("Olá, " + prefs.getString("nome", "Usuário") + "!");
+        txtXP.setText(prefs.getInt("xp", 0) + " XP");
+        txtStreak.setText(String.valueOf(prefs.getInt("streak", 0)));
 
         NavHelper.setup(this, "home");
         AddTaskHelper.setup(this);
@@ -76,15 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
         FocusNotificationManager.criarCanais(this);
         solicitarPermissaoNotificacao();
-
-        // Carrega tarefas e monta os avisos
-        verificarTarefas();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        carregarDados();
+        // Sempre que volta pra tela, busca dados frescos do banco
+        buscarXpEStreak();
         verificarTarefas();
     }
 
@@ -94,11 +94,39 @@ public class MainActivity extends AppCompatActivity {
         handler.removeCallbacksAndMessages(null);
     }
 
-    // ── Dados do SharedPreferences ────────────────────────────────────────────
-    private void carregarDados() {
-        txtWelcome.setText("Olá, " + prefs.getString("nome", "Usuário") + "!");
-        txtXP.setText(prefs.getInt("xp", 0) + " XP");
-        txtStreak.setText(String.valueOf(prefs.getInt("streak", 0)));
+    // ── Busca XP e streak do banco ────────────────────────────────────────────
+    private void buscarXpEStreak() {
+        int profileId = prefs.getInt("profile_id", 0);
+        if (profileId == 0) return;
+
+        ApiService api = RetrofitClient.getClient().create(ApiService.class);
+        api.getStats(profileId, "semana").enqueue(new Callback<StatsResponse>() {
+            @Override
+            public void onResponse(Call<StatsResponse> call, Response<StatsResponse> response) {
+                if (!response.isSuccessful()
+                        || response.body() == null
+                        || !"ok".equals(response.body().status)) return;
+
+                StatsResponse s = response.body();
+
+                // Atualiza SharedPreferences com valores do banco
+                prefs.edit()
+                        .putInt("xp", s.xp)
+                        .putInt("streak", s.streak)
+                        .apply();
+
+                // Atualiza UI
+                runOnUiThread(() -> {
+                    txtXP.setText(s.xp + " XP");
+                    txtStreak.setText(String.valueOf(s.streak));
+                });
+            }
+
+            @Override
+            public void onFailure(Call<StatsResponse> call, Throwable t) {
+                // Falha silenciosa — mantém valores do cache
+            }
+        });
     }
 
     // ── Busca tarefas e monta lista de avisos ─────────────────────────────────
@@ -142,8 +170,9 @@ public class MainActivity extends AppCompatActivity {
     private void montarAvisosPadrao(int pendentes, int concluidas) {
         avisos.clear();
         int streak = prefs.getInt("streak", 0);
+        int xp     = prefs.getInt("xp", 0);
 
-        // Aviso de tarefas pendentes ou conclusão total
+        // Tarefas
         if (pendentes > 0) {
             avisos.add(new String[]{
                     "⚠️ " + pendentes + " tarefa" + (pendentes != 1 ? "s" : "") + " pendente" + (pendentes != 1 ? "s" : "") + " hoje",
@@ -151,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             });
         } else if (concluidas > 0) {
             avisos.add(new String[]{
-                    "  Todas as tarefas concluídas!",
+                    "🎉 Todas as tarefas concluídas!",
                     "Incrível! Você completou " + concluidas + " tarefa" + (concluidas != 1 ? "s" : "") + " hoje"
             });
         } else {
@@ -161,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        // Aviso de streak
+        // Streak
         if (streak > 0) {
             avisos.add(new String[]{
                     "🔥 Streak de " + streak + " dia" + (streak != 1 ? "s" : "") + "!",
@@ -174,12 +203,16 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        // Dicas motivacionais fixas
-        avisos.add(new String[]{"💪 Cada tarefa concluída = +67 XP", ""});
+        // XP atual
+        avisos.add(new String[]{
+                "⭐ Você tem " + xp + " XP no total",
+                "Tarefas fáceis +10 · médias +25 · difíceis +50"
+        });
+
+        // Dicas fixas
         avisos.add(new String[]{"⏱️ Use o timer Pomodoro para focar melhor", "25 minutos de foco, 5 de descanso"});
         avisos.add(new String[]{"📊 Veja suas estatísticas em Stats", "Acompanhe sua evolução semanal"});
 
-        // Inicia rotação
         handler.removeCallbacksAndMessages(null);
         avisoIdx = 0;
         exibirAviso(avisoIdx);
@@ -196,12 +229,10 @@ public class MainActivity extends AppCompatActivity {
         txtStatus.animate().alpha(0f).setDuration(250).withEndAction(() -> {
             txtStatus.setText(aviso[0]);
 
-            // Cor dinâmica baseada no conteúdo
-            if (aviso[0].startsWith("⚠️"))       txtStatus.setTextColor(Color.parseColor("#FFAA44"));
-            else if (aviso[0].startsWith("🎉"))   txtStatus.setTextColor(Color.parseColor("#4ADE80"));
-            else                                   txtStatus.setTextColor(Color.parseColor("#AAAAAA"));
+            if (aviso[0].startsWith("⚠️"))     txtStatus.setTextColor(Color.parseColor("#FFAA44"));
+            else if (aviso[0].startsWith("🎉")) txtStatus.setTextColor(Color.parseColor("#4ADE80"));
+            else                               txtStatus.setTextColor(Color.parseColor("#AAAAAA"));
 
-            // Sub-mensagem
             if (aviso[1] != null && !aviso[1].isEmpty()) {
                 txtStatusSub.setText(aviso[1]);
                 txtStatusSub.setVisibility(View.VISIBLE);
@@ -241,7 +272,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int code, @NonNull String[] perms, @NonNull int[] results) {
         super.onRequestPermissionsResult(code, perms, results);
-        if (code == PERM_NOTIF && results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED)
+        if (code == PERM_NOTIF && results.length > 0
+                && results[0] == PackageManager.PERMISSION_GRANTED)
             agendarNotificacoes();
     }
 
