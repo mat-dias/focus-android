@@ -138,6 +138,12 @@
                 android:src="@drawable/icon_notification" app:tint="#888888"/>
         </LinearLayout>
 
+        <LinearLayout android:id="@+id/btnSup" style="@style/MenuRowStyle" android:layout_marginTop="8dp">
+            <TextView style="@style/MenuRowText" android:text="Suporte"/>
+            <ImageView android:layout_width="22dp" android:layout_height="22dp"
+                android:src="@drawable/icon_sup" app:tint="#888888"/>
+        </LinearLayout>
+
         <LinearLayout android:id="@+id/btnAbout" style="@style/MenuRowStyle" android:layout_marginTop="8dp">
             <TextView style="@style/MenuRowText" android:text="Sobre o App"/>
             <ImageView android:layout_width="22dp" android:layout_height="22dp"

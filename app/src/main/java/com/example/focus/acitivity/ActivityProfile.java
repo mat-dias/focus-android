@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.ImageView;
@@ -27,7 +28,7 @@ public class ActivityProfile extends AppCompatActivity {
 
     private TextView txtNome, txtEmail, txtXP, txtStreak;
     private ImageView imgAvatar;
-    private LinearLayout btnLogout, btnEditProfile, btnNotifications, btnAbout;
+    private LinearLayout btnLogout, btnEditProfile, btnNotifications,btnSup, btnAbout;
 
     private final ActivityResultLauncher<Intent> editLauncher =
             registerForActivityResult(
@@ -61,6 +62,7 @@ public class ActivityProfile extends AppCompatActivity {
         btnLogout        = findViewById(R.id.btnLogout);
         btnEditProfile   = findViewById(R.id.btnEditProfile);
         btnNotifications = findViewById(R.id.btnNotifications);
+        btnSup           = findViewById(R.id.btnSup);
         btnAbout         = findViewById(R.id.btnAbout);
     }
 
@@ -121,6 +123,20 @@ public class ActivityProfile extends AppCompatActivity {
             startActivity(new Intent(this, ActivityNotifications.class));
             overridePendingTransition(0, 0);
         });
+
+        btnSup.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Entrar na pagina de suporte")
+                    .setMessage("Tem certeza que deseja sair do app?")
+                    .setPositiveButton("Sair", (dialog, which) -> {
+                        Uri url = Uri.parse("https://google.com");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, url);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        });
+
 
         btnAbout.setOnClickListener(v ->
                 new AlertDialog.Builder(this)
