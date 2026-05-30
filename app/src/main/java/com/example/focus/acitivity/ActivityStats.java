@@ -8,16 +8,19 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.focus.AddTask.AddTaskHelper;
 import com.example.focus.NavBar.NavHelper;
 import com.example.focus.R;
 import com.example.focus.network.ApiService;
 import com.example.focus.network.RetrofitClient;
+import com.example.focus.responses.RelatorioResponse;
 import com.example.focus.responses.StatsResponse;
 import com.example.focus.views.PieChartView;
 
@@ -45,7 +48,15 @@ public class ActivityStats extends AppCompatActivity {
     private PieChartView pieChart;
     private LinearLayout btnPeriodoSemana, btnPeriodoMes, btnPeriodoTotal;
 
+    // ── Relatório ─────────────────────────────────────────────────────────────
+    private TextView txtRelatorio;
+    private AppCompatButton btnRelatorio;
+    private ProgressBar progressRelatorio;
+
     private int profileId;
+    private SharedPreferences prefs;
+
+    private static final String PREF_RELATORIO = "ultimo_relatorio";
 
     private final int[] CORES = {
             Color.parseColor("#4ADE80"),
@@ -66,8 +77,17 @@ public class ActivityStats extends AppCompatActivity {
 
         bindViews();
 
-        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+        prefs     = getSharedPreferences("user", MODE_PRIVATE);
         profileId = prefs.getInt("profile_id", 0);
+
+        // Mostra relatório salvo se existir
+        String salvo = prefs.getString(PREF_RELATORIO, null);
+        if (salvo != null) {
+            txtRelatorio.setText(salvo);
+            txtRelatorio.setVisibility(View.VISIBLE);
+        }
+
+        btnRelatorio.setOnClickListener(v -> gerarRelatorio());
 
         setupFiltroPeriodo();
     }
@@ -102,6 +122,9 @@ public class ActivityStats extends AppCompatActivity {
         btnPeriodoSemana      = findViewById(R.id.btnPeriodoSemana);
         btnPeriodoMes         = findViewById(R.id.btnPeriodoMes);
         btnPeriodoTotal       = findViewById(R.id.btnPeriodoTotal);
+        txtRelatorio          = findViewById(R.id.txtRelatorio);
+        btnRelatorio          = findViewById(R.id.btnRelatorio);
+        progressRelatorio     = findViewById(R.id.progressRelatorio);
     }
 
     // ── Filtro de período ─────────────────────────────────────────────────────
@@ -123,7 +146,7 @@ public class ActivityStats extends AppCompatActivity {
         resetarPill(btnPeriodoTotal,  corInativo, txtInativo);
 
         LinearLayout ativo = periodo.equals("semana") ? btnPeriodoSemana
-                : periodo.equals("mes")    ? btnPeriodoMes
+                : periodo.equals("mes") ? btnPeriodoMes
                 : btnPeriodoTotal;
         resetarPill(ativo, corAtivo, txtAtivo);
 
@@ -141,7 +164,7 @@ public class ActivityStats extends AppCompatActivity {
         }
     }
 
-    // ── Carregar ──────────────────────────────────────────────────────────────
+    // ── Carregar stats ────────────────────────────────────────────────────────
     private void carregarStats(String periodo) {
         if (profileId == 0) return;
         ApiService api = RetrofitClient.getClient().create(ApiService.class);
@@ -166,34 +189,74 @@ public class ActivityStats extends AppCompatActivity {
         });
     }
 
-    // ── Renderizar ────────────────────────────────────────────────────────────
-    private void renderizar(StatsResponse s) {
+    // ── Gerar relatório IA ────────────────────────────────────────────────────
+    private void gerarRelatorio() {
+        if (profileId == 0) return;
 
-        // Cards topo
+        btnRelatorio.setEnabled(false);
+        btnRelatorio.setText("Gerando...");
+        progressRelatorio.setVisibility(View.VISIBLE);
+        txtRelatorio.setVisibility(View.GONE);
+
+        ApiService api = RetrofitClient.getClient().create(ApiService.class);
+        api.getRelatorio(profileId).enqueue(new Callback<RelatorioResponse>() {
+            @Override
+            public void onResponse(Call<RelatorioResponse> call, Response<RelatorioResponse> response) {
+                btnRelatorio.setEnabled(true);
+                btnRelatorio.setText("Relatório personalizado");
+                progressRelatorio.setVisibility(View.GONE);
+
+                if (!response.isSuccessful()
+                        || response.body() == null
+                        || !"ok".equals(response.body().status)) {
+                    Toast.makeText(ActivityStats.this,
+                            "Erro ao gerar relatório", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String relatorio = response.body().relatorio;
+
+                // Salva no SharedPreferences
+                prefs.edit().putString(PREF_RELATORIO, relatorio).apply();
+
+                // Exibe na tela
+                txtRelatorio.setText(relatorio);
+                txtRelatorio.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<RelatorioResponse> call, Throwable t) {
+                btnRelatorio.setEnabled(true);
+                btnRelatorio.setText("Relatório personalizado");
+                progressRelatorio.setVisibility(View.GONE);
+                Toast.makeText(ActivityStats.this,
+                        "Erro de conexão", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // ── Renderizar stats ──────────────────────────────────────────────────────
+    private void renderizar(StatsResponse s) {
         txtStatsStreak.setText(String.valueOf(s.streak));
         txtStatsXP.setText(s.xp + " XP");
         txtNivel.setText("Nível " + s.nivel);
         txtXpProgresso.setText(s.xpProgresso + "% para Nível " + (s.nivel + 1));
         animarBarra(barXpFill, s.xpProgresso);
 
-        // Hoje — XP real baseado em prioridade
         txtTodayTasks.setText(String.valueOf(s.hojeTotal));
         txtTodayCompleted.setText(String.valueOf(s.hojeConcluidas));
         txtTodayXP.setText("+" + s.xpHoje);
         txtTaxaHoje.setText(s.taxaHoje + "%");
         animarBarra(barTaxaHojeFill, s.taxaHoje);
 
-        // Histórico
         txtMelhorStreak.setText(String.valueOf(s.melhorStreak));
         txtDiasAtivos.setText(String.valueOf(s.diasAtivos));
         txtDiasSemana.setText(s.diasSemana + "/7 dias");
 
-        // Taxa período
         txtTaxaConclusao.setText(s.taxaConclusao + "%");
         txtConcluidasPeriodo.setText(s.concluidasPeriodo + " de " + s.agendadasPeriodo);
         animarBarra(barTaxaFill, s.taxaConclusao);
 
-        // Prioridades — compatível com API < 24
         int high = 0, medium = 0, low = 0;
         if (s.prioridades != null) {
             Integer h = s.prioridades.get("high");
@@ -204,14 +267,13 @@ public class ActivityStats extends AppCompatActivity {
             low    = l != null ? l : 0;
         }
         int totalPrio = high + medium + low;
-        txtPrioHigh.setText(high   + " Alta");
+        txtPrioHigh.setText(high     + " Alta");
         txtPrioMedium.setText(medium + " Média");
-        txtPrioLow.setText(low     + " Baixa");
+        txtPrioLow.setText(low       + " Baixa");
         animarBarra(barHighFill,   totalPrio > 0 ? (high   * 100 / totalPrio) : 0);
         animarBarra(barMediumFill, totalPrio > 0 ? (medium * 100 / totalPrio) : 0);
         animarBarra(barLowFill,    totalPrio > 0 ? (low    * 100 / totalPrio) : 0);
 
-        // Gráfico e pizza
         renderizarBarras(s.barras);
         renderizarPizza(s.tags);
     }
@@ -241,7 +303,6 @@ public class ActivityStats extends AppCompatActivity {
         String[] diasPt = {"Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"};
 
         for (StatsResponse.BarraItem b : barras) {
-
             String labelPt = b.label;
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -272,8 +333,7 @@ public class ActivityStats extends AppCompatActivity {
             shape.setColor(b.qtd > 0
                     ? Color.parseColor("#06B6D4")
                     : Color.parseColor("#2A2A2A"));
-            shape.setCornerRadii(new float[]{
-                    6*dp, 6*dp, 6*dp, 6*dp, 0, 0, 0, 0});
+            shape.setCornerRadii(new float[]{6*dp, 6*dp, 6*dp, 6*dp, 0, 0, 0, 0});
             bar.setBackground(shape);
             coluna.addView(bar);
 

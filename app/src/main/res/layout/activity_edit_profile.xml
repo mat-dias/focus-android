@@ -201,17 +201,17 @@
             android:layout_marginBottom="32dp"/>
 
         <!-- BOTÃO SALVAR -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSalvarPerfil"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="48dp"
             android:text="Salvar alterações"
             android:textColor="#FFFFFF"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:background="@drawable/btn_gradient_primary"
-            android:elevation="6dp"
-            android:layout_marginBottom="32dp"/>
+            android:stateListAnimator="@null"
+            android:elevation="4dp"/>
 
     </LinearLayout>
 

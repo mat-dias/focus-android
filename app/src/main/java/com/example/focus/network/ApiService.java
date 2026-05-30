@@ -1,7 +1,8 @@
 package com.example.focus.network;
 
-import com.example.focus.responses.LoginResponse;
 import com.example.focus.responses.BasicResponse;
+import com.example.focus.responses.LoginResponse;
+import com.example.focus.responses.RelatorioResponse;
 import com.example.focus.responses.StatsResponse;
 import com.example.focus.responses.TaskResponse;
 import com.example.focus.responses.UpdateProfileResponse;
@@ -37,7 +38,9 @@ public interface ApiService {
     @FormUrlEncoded @POST("get_stats.php")
     Call<StatsResponse> getStats(@Field("profile_id") int profileId, @Field("periodo") String periodo);
 
-    // ← Atualizado: Base64 em vez de Multipart
+    @FormUrlEncoded @POST("get_relatorio.php")
+    Call<RelatorioResponse> getRelatorio(@Field("profile_id") int profileId);
+
     @FormUrlEncoded @POST("update_profile.php")
     Call<UpdateProfileResponse> updateProfile(
             @Field("user_id")      String userId,
